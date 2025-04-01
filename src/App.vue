@@ -1,25 +1,33 @@
 <script setup>
 
-import { ref, reactive} from 'vue'
+import { ref, reactive } from 'vue'
 
 const valid = ref(false)
 
 const incidencia = reactive({
-  nombre : '',
-  descripcion : '',
-  urgencia : ''
+  nombre: '',
+  descripcion: '',
+  urgencia: ''
 })
+
+const listaIncidencias = ref([]);
 
 const urgencias = ref(['Muy Urgente', 'Urgente', 'Media', 'Baja'])
 const urlBack = "http://localhost:8000/incidencias";
+
+const mostrarIncidencias = async () => {
+  const datos = await fetch(urlBack);
+  const resJson = await datos.json();
+  listaIncidencias.value = resJson;
+  console.log(resJson);
+}
 
 const reglasTexto = [
   value => Boolean(value) || 'El campo es necesario',
 ]
 
 const handleSubmit = async (e) => {
-
-  const datos = { nombre: incidencia.nombre, descripcion : incidencia.descripcion, urgencia : incidencia.urgencia};
+  const datos = { nombre: incidencia.nombre, descripcion: incidencia.descripcion, urgencia: incidencia.urgencia };
 
   const response = await fetch(urlBack, {
     method: "POST",
@@ -30,7 +38,7 @@ const handleSubmit = async (e) => {
   })
   e.target.reset();
   const resJson = await response.json();
-  const {message} = resJson;
+  const { message } = resJson;
   alert(message)
 }
 </script>
@@ -41,7 +49,8 @@ const handleSubmit = async (e) => {
       <v-form @submit.prevent="handleSubmit">
         <v-row>
           <v-col cols="12" class="pa-0">
-            <v-text-field required v-model="incidencia.nombre" label="Nombre de Incidencia" :rules="reglasTexto"></v-text-field>
+            <v-text-field required v-model="incidencia.nombre" label="Nombre de Incidencia"
+              :rules="reglasTexto"></v-text-field>
           </v-col>
           <v-col cols="12" class="pa-0">
             <v-text-field v-model="incidencia.descripcion" label="Descipcion de Incidencia" :rules="reglasTexto"
@@ -56,6 +65,32 @@ const handleSubmit = async (e) => {
           </v-col>
         </v-row>
       </v-form>
+      <v-row>
+        <v-col cols="12" class="pa-0 mt-16 text-start">
+          <v-btn class="text-center" @click="mostrarIncidencias">Mostrar Incidencias</v-btn>
+        </v-col>
+        <v-sheet>
+
+        </v-sheet>
+      </v-row>
+      <v-row>
+        <v-col col="12" >
+          <v-sheet class="mb-5 d-flex justify-space-evenly pa-5" v-for="incidencia in listaIncidencias" color="blue-grey-lighten-4 rounded-lg">
+            <div >
+              <div>Nombre : {{ incidencia.nombre }}</div>
+              <div>Descripcion : {{ incidencia.descripcion }}</div>
+              <div>urgencia : {{ incidencia.urgencia }}</div>
+            </div>
+            <div class="d-flex flex-column ga-2">
+              <v-btn>Actualizar</v-btn>
+              <v-btn color="deep-orange-lighten-3">Eliminar</v-btn>
+            </div>
+
+          </v-sheet>
+        </v-col>
+
+      </v-row>
+
     </v-container>
   </v-app>
 </template>
