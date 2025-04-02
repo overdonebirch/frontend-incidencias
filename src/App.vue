@@ -1,11 +1,11 @@
 <script setup>
 
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { generarId } from "./helpers/generarId.js";
 import Incidencia from './components/Incidencia.vue';
 import Formulario from './components/Formulario.vue';
 
-const valid = ref(false)
+const mostrarIncidencias = ref(false)
 
 const incidencia = reactive({
   id: '',
@@ -19,11 +19,15 @@ const listaIncidencias = ref([]);
 
 const urlBack = "http://localhost:8000/incidencias";
 
-const mostrarIncidencias = async () => {
+const obtenerIncidencias = async () => {
   const datos = await fetch(urlBack);
   const resJson = await datos.json();
   listaIncidencias.value = resJson;
 }
+
+onMounted(async () => {
+  await obtenerIncidencias();
+})
 
 
 const eliminarIncidencia = (id) => {
@@ -106,22 +110,16 @@ const handleSubmit = async (e) => {
 <template>
   <v-app>
     <v-container class="pt-10" style="max-width: 800px">
-      <Formulario
-      v-model:incidencia="incidencia"
+      <Formulario v-model:incidencia="incidencia" @handleSubmit="handleSubmit"></Formulario>
 
-      @handleSubmit="handleSubmit"
-      ></Formulario>
-      <v-row>
-        <v-col cols="12" class="pa-0 mt-16 text-start">
-          <v-btn class="text-center" @click="mostrarIncidencias">Mostrar Incidencias</v-btn>
-        </v-col>
-        <v-sheet>
-
-        </v-sheet>
-      </v-row>
       <v-row>
         <v-col col="12">
-          <Incidencia v-for="incidencia in listaIncidencias" :incidencia="incidencia"
+
+          <div v-if="listaIncidencias.length <= 0" class="text-center text-h5 amber text-blue-grey-lighten-3" >--No hay datos--</div>
+          <v-col v-else cols="12" class="pa-0 mt-16 text-start mb-10">
+            <v-btn class="text-center" @click="() => mostrarIncidencias = !mostrarIncidencias">Mostrar Incidencias</v-btn>
+          </v-col>
+          <Incidencia  v-if="mostrarIncidencias" v-for="incidencia in listaIncidencias" :incidencia="incidencia"
             @eliminarIncidencia="eliminarIncidencia" @modoActualizar="modoActualizar" />
         </v-col>
       </v-row>
@@ -130,6 +128,4 @@ const handleSubmit = async (e) => {
   </v-app>
 </template>
 
-<style>
-
-</style>
+<style></style>
