@@ -1,7 +1,10 @@
 <script setup>
 
 import { ref, reactive, computed } from 'vue'
-import {generarId} from "./helpers/generarId.js";
+import { generarId } from "./helpers/generarId.js";
+import Incidencia from './components/Incidencia.vue';
+
+
 const valid = ref(false)
 
 const incidencia = reactive({
@@ -20,7 +23,6 @@ const mostrarIncidencias = async () => {
   const datos = await fetch(urlBack);
   const resJson = await datos.json();
   listaIncidencias.value = resJson;
-  console.log(resJson);
 }
 
 const reglasTexto = [
@@ -48,33 +50,35 @@ const modoActualizar = (idInci) => {
 }
 
 const actualizarIncidencia = async (e) => {
-    const url = `${urlBack}/${incidencia.id}`;
-    const datos = {nombre: incidencia.nombre, descripcion: incidencia.descripcion, urgencia: incidencia.urgencia };
-    try {
-      const response = await fetch(url, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(datos),
-      })
-      const incidenciaActualizar = listaIncidencias.value.find(item => item.id === incidencia.id);
-      Object.assign(incidenciaActualizar,datos);
-      e.target.reset();
-      const resJson = await response.json();
-      const { message } = resJson;
-      alert(message)
-      incidencia.id = '';
-    }
-    catch(error){
-      console.log(error)
-    }
-  
+  const url = `${urlBack}/${incidencia.id}`;
+  const datos = { nombre: incidencia.nombre, descripcion: incidencia.descripcion, urgencia: incidencia.urgencia };
+  console.log(url);
+  console.log(datos);
+  try {
+    const response = await fetch(url, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(datos),
+    })
+    const incidenciaActualizar = listaIncidencias.value.find(item => item.id === incidencia.id);
+    Object.assign(incidenciaActualizar, datos);
+    e.target.reset();
+    const resJson = await response.json();
+    const { message } = resJson;
+    alert(message)
+    incidencia.id = '';
+  }
+  catch (error) {
+    console.log(error)
+  }
+
 }
 
 const handleSubmit = async (e) => {
-  const datos = { id : generarId(), nombre: incidencia.nombre, descripcion: incidencia.descripcion, urgencia: incidencia.urgencia };
-  if(incidencia.id){
+  const datos = { id: generarId(), nombre: incidencia.nombre, descripcion: incidencia.descripcion, urgencia: incidencia.urgencia };
+  if (incidencia.id) {
     actualizarIncidencia(e);
     return;
   }
@@ -86,7 +90,7 @@ const handleSubmit = async (e) => {
       },
       body: JSON.stringify(datos),
     })
-    listaIncidencias.value.push({...datos});
+    listaIncidencias.value.push({ ...datos });
     e.target.reset();
     const resJson = await response.json();
     const { message } = resJson;
@@ -136,21 +140,9 @@ const textoSubmit = computed(() => {
       </v-row>
       <v-row>
         <v-col col="12">
-          <v-sheet class="mb-5 d-flex justify-space-evenly pa-5" v-for="incidencia in listaIncidencias"
-            color="blue-grey-lighten-4 rounded-lg">
-            <div>
-              <div>Nombre : {{ incidencia.nombre }}</div>
-              <div>Descripcion : {{ incidencia.descripcion }}</div>
-              <div>urgencia : {{ incidencia.urgencia }}</div>
-            </div>
-            <div class="d-flex flex-column ga-2">
-              <v-btn @click="modoActualizar(incidencia.id)">Actualizar</v-btn>
-              <v-btn color="deep-orange-lighten-3" @click="eliminarIncidencia(incidencia.id)">Eliminar</v-btn>
-            </div>
-
-          </v-sheet>
+          <Incidencia v-for="incidencia in listaIncidencias" :incidencia="incidencia"
+            @eliminarIncidencia="eliminarIncidencia" @modoActualizar="modoActualizar" />
         </v-col>
-
       </v-row>
 
     </v-container>
@@ -158,5 +150,5 @@ const textoSubmit = computed(() => {
 </template>
 
 <style>
-/* No se necesitan estilos adicionales - usamos las clases de Vuetify */
+
 </style>
