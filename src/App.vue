@@ -1,11 +1,11 @@
 <script setup>
 
 import { ref, reactive, computed } from 'vue'
-
+import {generarId} from "./helpers/generarId.js";
 const valid = ref(false)
 
 const incidencia = reactive({
-  id : '',
+  id: '',
   nombre: '',
   descripcion: '',
   urgencia: ''
@@ -28,41 +28,72 @@ const reglasTexto = [
 ]
 
 const eliminarIncidencia = (id) => {
-  try{
-    fetch(`${urlBack}/${id}`,{
-      method : 'DELETE'
+  try {
+    fetch(`${urlBack}/${id}`, {
+      method: 'DELETE'
     })
     listaIncidencias.value = listaIncidencias.value.filter(item => item.id != id);
   }
-  catch(error){
+  catch (error) {
     console.log(error);
   }
 }
 
 const modoActualizar = (idInci) => {
   const incidenciaEncontrada = listaIncidencias.value.find(item => item.id == idInci);
-  const {id,nombre,descripcion,urgencia} = incidenciaEncontrada;
-  Object.assign(incidencia,{
-    id,nombre,descripcion,urgencia
+  const { id, nombre, descripcion, urgencia } = incidenciaEncontrada;
+  Object.assign(incidencia, {
+    id, nombre, descripcion, urgencia
   })
-  console.log(nombre,descripcion,urgencia);
 }
 
+const actualizarIncidencia = async (e) => {
+    const url = `${urlBack}/${incidencia.id}`;
+    const datos = {nombre: incidencia.nombre, descripcion: incidencia.descripcion, urgencia: incidencia.urgencia };
+    try {
+      const response = await fetch(url, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(datos),
+      })
+      e.target.reset();
+      const resJson = await response.json();
+      const { message } = resJson;
+      alert(message)
+      incidencia.id = '';
+    }
+    catch(error){
+      console.log(error)
+    }
+  
+}
 
 const handleSubmit = async (e) => {
-  const datos = { nombre: incidencia.nombre, descripcion: incidencia.descripcion, urgencia: incidencia.urgencia };
+  const datos = { id : generarId(), nombre: incidencia.nombre, descripcion: incidencia.descripcion, urgencia: incidencia.urgencia };
+  if(incidencia.id){
+    actualizarIncidencia(e);
+    return;
+  }
+  try {
+    const response = await fetch(urlBack, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(datos),
+    })
+    listaIncidencias.value.push({...datos});
+    e.target.reset();
+    const resJson = await response.json();
+    const { message } = resJson;
+    alert(message)
 
-  const response = await fetch(urlBack, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(datos),
-  })
-  e.target.reset();
-  const resJson = await response.json();
-  const { message } = resJson;
-  alert(message)
+  }
+  catch (error) {
+    console.log(error);
+  }
 }
 
 const textoSubmit = computed(() => {
@@ -74,7 +105,7 @@ const textoSubmit = computed(() => {
 <template>
   <v-app>
     <v-container class="pt-10" style="max-width: 800px">
-      <v-form @submit.prevent="handleSubmit">
+      <v-form class="pa-10" @submit.prevent="handleSubmit">
         <v-row>
           <v-col cols="12" class="pa-0">
             <v-text-field required v-model="incidencia.nombre" label="Nombre de Incidencia"
@@ -89,7 +120,7 @@ const textoSubmit = computed(() => {
             </v-select>
           </v-col>
           <v-col cols="12" class="pa-0 text-end ">
-            <v-btn class="mx-auto " type="submit">{{textoSubmit}}</v-btn>
+            <v-btn class="mx-auto " type="submit">{{ textoSubmit }}</v-btn>
           </v-col>
         </v-row>
       </v-form>
@@ -102,20 +133,17 @@ const textoSubmit = computed(() => {
         </v-sheet>
       </v-row>
       <v-row>
-        <v-col col="12" >
-          <v-sheet class="mb-5 d-flex justify-space-evenly pa-5" v-for="incidencia in listaIncidencias" color="blue-grey-lighten-4 rounded-lg">
-            <div >
+        <v-col col="12">
+          <v-sheet class="mb-5 d-flex justify-space-evenly pa-5" v-for="incidencia in listaIncidencias"
+            color="blue-grey-lighten-4 rounded-lg">
+            <div>
               <div>Nombre : {{ incidencia.nombre }}</div>
               <div>Descripcion : {{ incidencia.descripcion }}</div>
               <div>urgencia : {{ incidencia.urgencia }}</div>
             </div>
             <div class="d-flex flex-column ga-2">
-              <v-btn
-              @click="modoActualizar(incidencia.id)"
-              >Actualizar</v-btn>
-              <v-btn color="deep-orange-lighten-3"
-              @click="eliminarIncidencia(incidencia.id)"
-              >Eliminar</v-btn>
+              <v-btn @click="modoActualizar(incidencia.id)">Actualizar</v-btn>
+              <v-btn color="deep-orange-lighten-3" @click="eliminarIncidencia(incidencia.id)">Eliminar</v-btn>
             </div>
 
           </v-sheet>
