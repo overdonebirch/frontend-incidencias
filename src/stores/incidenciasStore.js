@@ -1,10 +1,14 @@
 import { defineStore } from "pinia";
 import { reactive, ref } from "vue";
 
-const urlBack = "http://localhost:8000/incidencias";
+
 import { generarId } from "../helpers/generarId.js";
+import { IncidenciaService } from "../services/incidenciasService.js";
 
 export const useIncidenciasStore = defineStore('incidencias', () => {
+    const urlBack = "http://localhost:8000/incidencias";
+    const incidenciaService = IncidenciaService();
+
     const incidencia = reactive({
         id: '',
         nombre: '',
@@ -14,21 +18,13 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
     const listaIncidencias = ref([]);
 
     async function obtenerIncidencias() {
-        const datos = await fetch(urlBack);
-        const resJson = await datos.json();
-        listaIncidencias.value = resJson;
+
+        listaIncidencias.value = await incidenciaService.obtenerIncidencias();
     }
 
     function eliminarIncidencia(id) {
-        try {
-            fetch(`${urlBack}/${id}`, {
-                method: 'DELETE'
-            })
-            listaIncidencias.value = listaIncidencias.value.filter(item => item.id != id);
-        }
-        catch (error) {
-            console.log(error);
-        }
+        incidenciaService.eliminarIncidencia(id);
+        listaIncidencias.value = listaIncidencias.value.filter(item => item.id != id);
     }
 
     const modoActualizar = (idInci) => {
@@ -46,49 +42,28 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
             actualizarIncidencia(e);
             return;
         }
-        try {
-            const response = await fetch(urlBack, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(datos),
-            })
-            listaIncidencias.value.push({ ...datos });
-            e.target.reset();
-            const resJson = await response.json();
-            const { message } = resJson;
-            alert(message)
 
-        }
-        catch (error) {
-            console.log(error);
-        }
+        const response = await incidenciaService.crearIncidencia(datos);
+        listaIncidencias.value.push({ ...datos });
+
+        e.target.reset();
+        const resJson = await response.json();
+        const { message } = resJson;
+        alert(message)
     }
 
     const actualizarIncidencia = async (e) => {
-        const url = `${urlBack}/${incidencia.id}`;
         const datos = { nombre: incidencia.nombre, descripcion: incidencia.descripcion, urgencia: incidencia.urgencia };
-        try {
-            const response = await fetch(url, {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(datos),
-            })
-            const incidenciaActualizar = listaIncidencias.value.find(item => item.id === incidencia.id);
-            Object.assign(incidenciaActualizar, datos);
-            e.target.reset();
-            const resJson = await response.json();
-            const { message } = resJson;
-            alert(message)
-            incidencia.id = '';
-        }
-        catch (error) {
-            console.log(error)
-        }
 
+        const response = await incidenciaService.actualizarIncidencia(datos, incidencia.id);
+        const incidenciaActualizar = listaIncidencias.value.find(item => item.id === incidencia.id);
+
+        Object.assign(incidenciaActualizar, datos);
+        e.target.reset();
+        const resJson = await response.json();
+        const { message } = resJson;
+        alert(message)
+        incidencia.id = '';
     }
 
 
