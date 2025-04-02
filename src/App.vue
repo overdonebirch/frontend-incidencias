@@ -8,8 +8,8 @@ import Formulario from './components/Formulario.vue';
 const valid = ref(false)
 
 const incidencia = reactive({
-  id: '',
-  nombre: '',
+  id: '22',
+  nombre: 'asdasd',
   descripcion: '',
   urgencia: ''
 })
@@ -107,10 +107,8 @@ const handleSubmit = async (e) => {
   <v-app>
     <v-container class="pt-10" style="max-width: 800px">
       <Formulario
-      v-model:id="incidencia.id"
-      v-model:nombre="incidencia.nombre"
-      v-model:descripcion="incidencia.descripcion"
-      v-model:urgencia="incidencia.urgencia"
+      v-model:incidencia="incidencia"
+
       @handleSubmit="handleSubmit"
       ></Formulario>
       <v-row>
