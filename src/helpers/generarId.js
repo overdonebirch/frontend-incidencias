@@ -1,2 +1,2 @@
-const generarId = () => Math.random().toString().substring(2);
+export const generarId = () => Math.random().toString().substring(2);
 
