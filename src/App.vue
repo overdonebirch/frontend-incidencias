@@ -26,6 +26,18 @@ const reglasTexto = [
   value => Boolean(value) || 'El campo es necesario',
 ]
 
+const eliminarIncidencia = (id) => {
+  try{
+    fetch(`${urlBack}/${id}`,{
+      method : 'DELETE'
+    })
+    listaIncidencias.value = listaIncidencias.value.filter(item => item.id != id);
+  }
+  catch(error){
+    console.log(error);
+  }
+
+}
 const handleSubmit = async (e) => {
   const datos = { nombre: incidencia.nombre, descripcion: incidencia.descripcion, urgencia: incidencia.urgencia };
 
@@ -41,6 +53,8 @@ const handleSubmit = async (e) => {
   const { message } = resJson;
   alert(message)
 }
+
+
 </script>
 
 <template>
@@ -83,7 +97,9 @@ const handleSubmit = async (e) => {
             </div>
             <div class="d-flex flex-column ga-2">
               <v-btn>Actualizar</v-btn>
-              <v-btn color="deep-orange-lighten-3">Eliminar</v-btn>
+              <v-btn color="deep-orange-lighten-3"
+              @click="eliminarIncidencia(incidencia.id)"
+              >Eliminar</v-btn>
             </div>
 
           </v-sheet>
