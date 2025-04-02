@@ -35,37 +35,33 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
         })
     }
 
-
     const handleSubmit = async (e) => {
-        const datos = { id: generarId(), nombre: incidencia.nombre, descripcion: incidencia.descripcion, urgencia: incidencia.urgencia };
+        const datos = { 
+            nombre: incidencia.nombre, 
+            descripcion: incidencia.descripcion, 
+            urgencia: incidencia.urgencia 
+        };
+        let response;
+        
         if (incidencia.id) {
-            actualizarIncidencia(e);
-            return;
+            response = await incidenciaService.actualizarIncidencia(datos, incidencia.id);
+            const incidenciaActualizar = listaIncidencias.value.find(item => item.id === incidencia.id);
+            Object.assign(incidenciaActualizar, datos);
+            incidencia.id = '';
+        } 
+        else {
+            const nuevoId = generarId();
+            const datosCompletos = { id: nuevoId, ...datos };
+            response = await incidenciaService.crearIncidencia(datosCompletos);
+            listaIncidencias.value.push(datosCompletos);
         }
-
-        const response = await incidenciaService.crearIncidencia(datos);
-        listaIncidencias.value.push({ ...datos });
+        
 
         e.target.reset();
         const resJson = await response.json();
         const { message } = resJson;
-        alert(message)
+        alert(message);
     }
-
-    const actualizarIncidencia = async (e) => {
-        const datos = { nombre: incidencia.nombre, descripcion: incidencia.descripcion, urgencia: incidencia.urgencia };
-
-        const response = await incidenciaService.actualizarIncidencia(datos, incidencia.id);
-        const incidenciaActualizar = listaIncidencias.value.find(item => item.id === incidencia.id);
-
-        Object.assign(incidenciaActualizar, datos);
-        e.target.reset();
-        const resJson = await response.json();
-        const { message } = resJson;
-        alert(message)
-        incidencia.id = '';
-    }
-
 
     return {
         incidencia,
@@ -73,7 +69,6 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
         eliminarIncidencia,
         modoActualizar,
         obtenerIncidencias,
-        handleSubmit,
-        actualizarIncidencia
+        handleSubmit
     }
 })
