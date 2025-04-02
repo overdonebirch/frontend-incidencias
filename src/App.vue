@@ -58,6 +58,8 @@ const actualizarIncidencia = async (e) => {
         },
         body: JSON.stringify(datos),
       })
+      const incidenciaActualizar = listaIncidencias.value.find(item => item.id === incidencia.id);
+      Object.assign(incidenciaActualizar,datos);
       e.target.reset();
       const resJson = await response.json();
       const { message } = resJson;
