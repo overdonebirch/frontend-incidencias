@@ -1,24 +1,25 @@
 <script setup>
     import { ref, reactive, computed } from 'vue'
-    const incidencia = defineModel('incidencia');
+    import { useIncidenciasStore } from '../stores/incidenciasStore';
+    const incidenciasStore = useIncidenciasStore();
     const emits = defineEmits(['handleSubmit'])
     const urgencias = ref(['Muy Urgente', 'Urgente', 'Media', 'Baja'])
     const reglasTexto = [
         value => Boolean(value) || 'El campo es necesario',
     ]
     const textoSubmit = computed(() => {
-        return incidencia.value.id ? "Actualizar Incidencia" : "Agregar Incidencia";
+        return incidenciasStore.incidencia.id ? "Actualizar Incidencia" : "Agregar Incidencia";
     })
 </script>
 
 
 <template>
-    <v-form class="pa-10" @submit.prevent="$emit('handleSubmit', $event)">
+    <v-form class="pa-10" @submit.prevent="incidenciasStore.handleSubmit">
         <v-row>
             <v-col cols="12" class="pa-0">
                 <v-text-field 
                     required 
-                    v-model="incidencia.nombre"
+                    v-model="incidenciasStore.incidencia.nombre"
                     label="Nombre de Incidencia"
                     :rules="reglasTexto"
                     variant="outlined"
@@ -26,7 +27,7 @@
             </v-col>
             <v-col cols="12" class="pa-0">
                 <v-text-field 
-                    v-model="incidencia.descripcion"
+                    v-model="incidenciasStore.incidencia.descripcion"
                     label="Descripción de Incidencia" 
                     :rules="reglasTexto" 
                     required
@@ -35,7 +36,7 @@
             </v-col>
             <v-col cols="12" class="pa-0">
                 <v-select 
-                     v-model="incidencia.urgencia"
+                     v-model="incidenciasStore.incidencia.urgencia"
                     :items="urgencias" 
                     label="Selecciona urgencia"
                     variant="outlined"

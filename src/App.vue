@@ -18,15 +18,14 @@ onMounted(async () => {
 <template>
   <v-app>
     <v-container class="pt-10" style="max-width: 800px">
-      <Formulario v-model:incidencia="incidenciasStore.incidencia" @handleSubmit="incidenciasStore.handleSubmit"></Formulario>
+      <Formulario></Formulario>
       <v-row>
         <v-col col="12">
           <div v-if="incidenciasStore.listaIncidencias.length <= 0" class="text-center text-h5 amber text-blue-grey-lighten-3" >--No hay datos--</div>
-          <v-col v-else cols="12" class="pa-0 mt-16 text-start mb-10">
-            <v-btn class="text-center" @click="() => mostrarIncidencias = !mostrarIncidencias">Mostrar Incidencias</v-btn>
+          <v-col v-else cols="12" class="pa-0 mt-16 text-center mb-10">
+            <v-btn @click="() => mostrarIncidencias = !mostrarIncidencias">Mostrar Incidencias</v-btn>
           </v-col>
-          <Incidencia  v-if="mostrarIncidencias" v-for="incidencia in incidenciasStore.listaIncidencias" :incidencia="incidencia"
-            @eliminarIncidencia="incidenciasStore.eliminarIncidencia" @modoActualizar="incidenciasStore.modoActualizar" />
+          <Incidencia  v-if="mostrarIncidencias" v-for="incidencia in incidenciasStore.listaIncidencias" :incidencia="incidencia"/>
         </v-col>
       </v-row>
     </v-container>

@@ -7,7 +7,7 @@ import { generarId } from "../helpers/generarId.js";
 export const useIncidenciasStore = defineStore('incidencias', () => {
     const incidencia = reactive({
         id: '',
-        nombre: 'asdasd',
+        nombre: '',
         descripcion: '',
         urgencia: ''
     })
