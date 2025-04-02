@@ -8,7 +8,7 @@ import Formulario from './components/Formulario.vue';
 const valid = ref(false)
 
 const incidencia = reactive({
-  id: '22',
+  id: '',
   nombre: 'asdasd',
   descripcion: '',
   urgencia: ''
