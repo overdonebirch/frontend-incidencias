@@ -3,7 +3,7 @@
 import { ref, reactive, computed } from 'vue'
 import { generarId } from "./helpers/generarId.js";
 import Incidencia from './components/Incidencia.vue';
-
+import Formulario from './components/Formulario.vue';
 
 const valid = ref(false)
 
@@ -16,7 +16,7 @@ const incidencia = reactive({
 
 const listaIncidencias = ref([]);
 
-const urgencias = ref(['Muy Urgente', 'Urgente', 'Media', 'Baja'])
+
 const urlBack = "http://localhost:8000/incidencias";
 
 const mostrarIncidencias = async () => {
@@ -25,9 +25,6 @@ const mostrarIncidencias = async () => {
   listaIncidencias.value = resJson;
 }
 
-const reglasTexto = [
-  value => Boolean(value) || 'El campo es necesario',
-]
 
 const eliminarIncidencia = (id) => {
   try {
@@ -102,34 +99,20 @@ const handleSubmit = async (e) => {
   }
 }
 
-const textoSubmit = computed(() => {
-  return incidencia.id ? "Actualizar Incidencia" : "Agregar Incidencia";
-})
+
 
 </script>
 
 <template>
   <v-app>
     <v-container class="pt-10" style="max-width: 800px">
-      <v-form class="pa-10" @submit.prevent="handleSubmit">
-        <v-row>
-          <v-col cols="12" class="pa-0">
-            <v-text-field required v-model="incidencia.nombre" label="Nombre de Incidencia"
-              :rules="reglasTexto"></v-text-field>
-          </v-col>
-          <v-col cols="12" class="pa-0">
-            <v-text-field v-model="incidencia.descripcion" label="Descipcion de Incidencia" :rules="reglasTexto"
-              required></v-text-field>
-          </v-col>
-          <v-col cols="12" class="pa-0">
-            <v-select :items="urgencias" v-model="incidencia.urgencia" label="selecciona urgencia">
-            </v-select>
-          </v-col>
-          <v-col cols="12" class="pa-0 text-end ">
-            <v-btn class="mx-auto " type="submit">{{ textoSubmit }}</v-btn>
-          </v-col>
-        </v-row>
-      </v-form>
+      <Formulario
+      v-model:id="incidencia.id"
+      v-model:nombre="incidencia.nombre"
+      v-model:descripcion="incidencia.descripcion"
+      v-model:urgencia="incidencia.urgencia"
+      @handleSubmit="handleSubmit"
+      ></Formulario>
       <v-row>
         <v-col cols="12" class="pa-0 mt-16 text-start">
           <v-btn class="text-center" @click="mostrarIncidencias">Mostrar Incidencias</v-btn>
