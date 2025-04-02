@@ -1,10 +1,11 @@
 <script setup>
 
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
 
 const valid = ref(false)
 
 const incidencia = reactive({
+  id : '',
   nombre: '',
   descripcion: '',
   urgencia: ''
@@ -36,8 +37,18 @@ const eliminarIncidencia = (id) => {
   catch(error){
     console.log(error);
   }
-
 }
+
+const modoActualizar = (idInci) => {
+  const incidenciaEncontrada = listaIncidencias.value.find(item => item.id == idInci);
+  const {id,nombre,descripcion,urgencia} = incidenciaEncontrada;
+  Object.assign(incidencia,{
+    id,nombre,descripcion,urgencia
+  })
+  console.log(nombre,descripcion,urgencia);
+}
+
+
 const handleSubmit = async (e) => {
   const datos = { nombre: incidencia.nombre, descripcion: incidencia.descripcion, urgencia: incidencia.urgencia };
 
@@ -54,6 +65,9 @@ const handleSubmit = async (e) => {
   alert(message)
 }
 
+const textoSubmit = computed(() => {
+  return incidencia.id ? "Actualizar Incidencia" : "Agregar Incidencia";
+})
 
 </script>
 
@@ -75,7 +89,7 @@ const handleSubmit = async (e) => {
             </v-select>
           </v-col>
           <v-col cols="12" class="pa-0 text-end ">
-            <v-btn class="mx-auto " type="submit">Agregar Incidencia</v-btn>
+            <v-btn class="mx-auto " type="submit">{{textoSubmit}}</v-btn>
           </v-col>
         </v-row>
       </v-form>
@@ -96,7 +110,9 @@ const handleSubmit = async (e) => {
               <div>urgencia : {{ incidencia.urgencia }}</div>
             </div>
             <div class="d-flex flex-column ga-2">
-              <v-btn>Actualizar</v-btn>
+              <v-btn
+              @click="modoActualizar(incidencia.id)"
+              >Actualizar</v-btn>
               <v-btn color="deep-orange-lighten-3"
               @click="eliminarIncidencia(incidencia.id)"
               >Eliminar</v-btn>
