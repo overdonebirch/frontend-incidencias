@@ -1,15 +1,14 @@
 import { defineStore } from "pinia";
 import { reactive, ref } from "vue";
-
+import Ajv from "ajv"
 
 import { generarId } from "../helpers/generarId.js";
 import { IncidenciaService } from "../services/incidenciasService.js";
+import { validarCampos } from "../helpers/validarDatossChema.js";
 
 export const useIncidenciasStore = defineStore('incidencias', () => {
     const urlBack = "http://localhost:8000/incidencias";
     const incidenciaService = IncidenciaService();
-
-
 
     const incidencia = reactive({
         id: '',
@@ -19,9 +18,13 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
     })
     const listaIncidencias = ref([]);
     const jsonSchema = ref(null);
+    const validar_incidencia = ref(null);
+
+    const ajv = new Ajv();
 
     async function obtenerSchema() {
         jsonSchema.value = await incidenciaService.obtenerSchema();
+        validar_incidencia.value = ajv.compile(jsonSchema.value);
     }
     async function obtenerIncidencias() {
 
@@ -42,6 +45,7 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
     }
 
     const handleSubmit = async (e) => {
+
         const datos = { 
             nombre: incidencia.nombre, 
             descripcion: incidencia.descripcion, 
@@ -57,9 +61,13 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
         } 
         else {
             const nuevoId = generarId();
-            const datosCompletos = { id: nuevoId, ...datos };
-            response = await incidenciaService.crearIncidencia(datosCompletos);
-            listaIncidencias.value.push(datosCompletos);
+            datos.id = nuevoId;
+            //Se validan los inputs del form con el esquema :
+            if(!validarCampos(validar_incidencia.value,datos)){
+                return;
+            } 
+            response = await incidenciaService.crearIncidencia(datos);
+            listaIncidencias.value.push({...datos});
         }
         
 
