@@ -1,6 +1,6 @@
 import Ajv from "ajv";
 import ajvErrors from "ajv-errors";
-
+import { useAlertasStore } from "../stores/alertasStore";
 const ajv = new Ajv({ 
   allErrors: true,
   strict: false 
@@ -8,7 +8,8 @@ const ajv = new Ajv({
 ajvErrors(ajv);
 
 export const validarCampos = (schema, datos) => {
-  
+
+    const alertasStore = useAlertasStore();
     const validar = ajv.compile(schema);
     const esValido = validar(datos);
     
@@ -17,6 +18,8 @@ export const validarCampos = (schema, datos) => {
       errors.forEach(error => {
         const {instancePath,message} = error;
         const campo = instancePath.replace("/","");
+        const mensaje = campo + " " +message;
+        alertasStore.agregarAlerta("error",mensaje);
         console.log(campo,message);
       })
       return false;

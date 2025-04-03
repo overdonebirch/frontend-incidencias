@@ -1,12 +1,13 @@
 import { defineStore } from "pinia";
 import { reactive, ref } from "vue";
 
-
+import { useAlertasStore } from "../stores/alertasStore";
 import { generarId } from "../helpers/generarId.js";
 import { IncidenciaService } from "../services/incidenciasService.js";
 import { validarCampos } from "../helpers/validarDatossChema.js";
 
 export const useIncidenciasStore = defineStore('incidencias', () => {
+    const alertasStore = useAlertasStore();
     const urlBack = "http://localhost:8000/incidencias";
     const incidenciaService = IncidenciaService();
     const cargarFormulario = ref(false);
@@ -72,7 +73,7 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
         e.target.reset();
         const resJson = await response.json();
         const { message } = resJson;
-        alert(message);
+        alertasStore.agregarAlerta("success",message);
     }
 
     return {

@@ -5,8 +5,9 @@ import { ref, reactive, computed, onMounted } from 'vue'
 import Incidencia from './components/Incidencia.vue';
 import Formulario from './components/Formulario.vue';
 import { useIncidenciasStore } from './stores/incidenciasStore.js';
-
+import { useAlertasStore } from './stores/alertasStore.js';
 const incidenciasStore = useIncidenciasStore();
+const alertasStore = useAlertasStore();
 const mostrarIncidencias = ref(false)
 
 onMounted(async () => {
@@ -23,7 +24,8 @@ onMounted(async () => {
         <v-progress-circular color="primary" indeterminate></v-progress-circular>
       </div>
     <v-container class="pt-10" style="max-width: 800px" v-if="incidenciasStore.cargarFormulario">
-
+      <v-alert v-for="alerta in alertasStore.listaAlertas" :title=alerta.tipo  :type=alerta.tipo :text=alerta.mensaje class="mb-3" text="asdasdasd" >
+      </v-alert>
       <Formulario></Formulario>
       <v-row>
         <v-col col="12">
