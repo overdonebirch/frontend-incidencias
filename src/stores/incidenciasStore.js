@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { reactive, ref } from "vue";
-import Ajv from "ajv"
+
 
 import { generarId } from "../helpers/generarId.js";
 import { IncidenciaService } from "../services/incidenciasService.js";
@@ -18,13 +18,9 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
     })
     const listaIncidencias = ref([]);
     const jsonSchema = ref(null);
-    const validar_incidencia = ref(null);
-
-    const ajv = new Ajv();
 
     async function obtenerSchema() {
         jsonSchema.value = await incidenciaService.obtenerSchema();
-        validar_incidencia.value = ajv.compile(jsonSchema.value);
     }
     async function obtenerIncidencias() {
 
@@ -63,7 +59,7 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
             const nuevoId = generarId();
             datos.id = nuevoId;
             //Se validan los inputs del form con el esquema :
-            if(!validarCampos(validar_incidencia.value,datos)){
+            if(!validarCampos(jsonSchema.value,datos)){
                 return;
             } 
             response = await incidenciaService.crearIncidencia(datos);
