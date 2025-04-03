@@ -9,6 +9,8 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
     const urlBack = "http://localhost:8000/incidencias";
     const incidenciaService = IncidenciaService();
 
+
+
     const incidencia = reactive({
         id: '',
         nombre: '',
@@ -16,7 +18,11 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
         urgencia: ''
     })
     const listaIncidencias = ref([]);
+    const jsonSchema = ref(null);
 
+    async function obtenerSchema() {
+        jsonSchema.value = await incidenciaService.obtenerSchema();
+    }
     async function obtenerIncidencias() {
 
         listaIncidencias.value = await incidenciaService.obtenerIncidencias();
@@ -66,9 +72,11 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
     return {
         incidencia,
         listaIncidencias,
+        jsonSchema,
         eliminarIncidencia,
         modoActualizar,
         obtenerIncidencias,
-        handleSubmit
+        handleSubmit,
+        obtenerSchema
     }
 })

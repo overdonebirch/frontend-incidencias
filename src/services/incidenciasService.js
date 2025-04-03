@@ -7,6 +7,12 @@ export const IncidenciaService = () => {
         const resJson = await datos.json();
         return resJson;
     }
+
+    async function obtenerSchema() {
+        const datos = await fetch(`${urlBack}/jsonschema`);
+        const schema = await datos.json();
+        return schema;
+    }
    
     function eliminarIncidencia(id) {
         try {
@@ -48,6 +54,7 @@ export const IncidenciaService = () => {
         eliminarIncidencia,
         obtenerIncidencias,
         crearIncidencia,
-        actualizarIncidencia
+        actualizarIncidencia,
+        obtenerSchema
     }
 }

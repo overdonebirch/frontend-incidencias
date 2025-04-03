@@ -11,6 +11,7 @@ const mostrarIncidencias = ref(false)
 
 onMounted(async () => {
   await incidenciasStore.obtenerIncidencias();
+  await incidenciasStore.obtenerSchema();
 })
 
 </script>
