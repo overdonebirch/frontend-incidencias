@@ -1,13 +1,27 @@
-import Ajv from "ajv"
-const ajv = new Ajv();
+import Ajv from "ajv";
+import ajvErrors from "ajv-errors";
 
-export const validarCampos = (schema,datos) => {
+const ajv = new Ajv({ 
+  allErrors: true,
+  strict: false 
+});
+ajvErrors(ajv);
+
+export const validarCampos = (schema, datos) => {
+  
     const validar = ajv.compile(schema);
     const esValido = validar(datos);
-    if(!esValido){
-        console.log(validar.errors);
-        return false;
+    
+    if (!esValido) {
+      const {errors} = validar;
+      errors.forEach(error => {
+        const {instancePath,message} = error;
+        const campo = instancePath.replace("/","");
+        console.log(campo,message);
+      })
+      return false;
     }
+    
     return true;
-}
 
+}

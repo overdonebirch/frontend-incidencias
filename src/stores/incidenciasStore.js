@@ -9,7 +9,7 @@ import { validarCampos } from "../helpers/validarDatossChema.js";
 export const useIncidenciasStore = defineStore('incidencias', () => {
     const urlBack = "http://localhost:8000/incidencias";
     const incidenciaService = IncidenciaService();
-
+    
     const incidencia = reactive({
         id: '',
         nombre: '',
@@ -59,6 +59,7 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
             const nuevoId = generarId();
             datos.id = nuevoId;
             //Se validan los inputs del form con el esquema :
+
             if(!validarCampos(jsonSchema.value,datos)){
                 return;
             } 
