@@ -19,15 +19,21 @@ onMounted(async () => {
 
 <template>
   <v-app>
-    <v-container class="pt-10" style="max-width: 800px">
+    <div class="text-center pt-16" v-if="!incidenciasStore.cargarFormulario">
+        <v-progress-circular color="primary" indeterminate></v-progress-circular>
+      </div>
+    <v-container class="pt-10" style="max-width: 800px" v-if="incidenciasStore.cargarFormulario">
+
       <Formulario></Formulario>
       <v-row>
         <v-col col="12">
-          <div v-if="incidenciasStore.listaIncidencias.length <= 0" class="text-center text-h5 amber text-blue-grey-lighten-3" >--No hay datos--</div>
+          <div v-if="incidenciasStore.listaIncidencias.length <= 0"
+            class="text-center text-h5 amber text-blue-grey-lighten-3">--No hay datos--</div>
           <v-col v-else cols="12" class="pa-0 mt-16 text-center mb-10">
             <v-btn @click="() => mostrarIncidencias = !mostrarIncidencias">Mostrar Incidencias</v-btn>
           </v-col>
-          <Incidencia  v-if="mostrarIncidencias" v-for="incidencia in incidenciasStore.listaIncidencias" :incidencia="incidencia"/>
+          <Incidencia v-if="mostrarIncidencias" v-for="incidencia in incidenciasStore.listaIncidencias"
+            :incidencia="incidencia" />
         </v-col>
       </v-row>
     </v-container>

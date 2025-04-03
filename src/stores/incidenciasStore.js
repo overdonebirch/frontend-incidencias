@@ -9,7 +9,7 @@ import { validarCampos } from "../helpers/validarDatossChema.js";
 export const useIncidenciasStore = defineStore('incidencias', () => {
     const urlBack = "http://localhost:8000/incidencias";
     const incidenciaService = IncidenciaService();
-    
+    const cargarFormulario = ref(false);
     const incidencia = reactive({
         id: '',
         nombre: '',
@@ -21,6 +21,7 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
 
     async function obtenerSchema() {
         jsonSchema.value = await incidenciaService.obtenerSchema();
+        cargarFormulario.value = true;
     }
     async function obtenerIncidencias() {
 
@@ -78,6 +79,7 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
         incidencia,
         listaIncidencias,
         jsonSchema,
+        cargarFormulario,
         eliminarIncidencia,
         modoActualizar,
         obtenerIncidencias,
