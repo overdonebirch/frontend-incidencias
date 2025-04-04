@@ -16,7 +16,7 @@ const props = defineProps({
 <template>
   <v-sheet class="mb-5 d-flex justify-space-evenly pa-5" color="blue-grey-lighten-4 rounded-lg">
     <div>
-      <div>Nombre : {{ incidencia.nombre }}</div>
+      <div>Titulo : {{ incidencia.titulo }}</div>
       <div>Descripcion : {{ incidencia.descripcion }}</div>
       <div>urgencia : {{ incidencia.urgencia }}</div>
     </div>

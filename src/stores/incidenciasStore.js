@@ -13,7 +13,7 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
     const cargarFormulario = ref(false);
     const incidencia = reactive({
         id: '',
-        nombre: '',
+        titulo: '',
         descripcion: '',
         urgencia: ''
     })
@@ -36,16 +36,16 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
 
     const modoActualizar = (idInci) => {
         const incidenciaEncontrada = listaIncidencias.value.find(item => item.id == idInci);
-        const { id, nombre, descripcion, urgencia } = incidenciaEncontrada;
+        const { id, titulo, descripcion, urgencia } = incidenciaEncontrada;
         Object.assign(incidencia, {
-            id, nombre, descripcion, urgencia
+            id, titulo, descripcion, urgencia
         })
     }
 
     const handleSubmit = async (e) => {
 
         const datos = { 
-            nombre: incidencia.nombre, 
+            titulo: incidencia.titulo, 
             descripcion: incidencia.descripcion, 
             urgencia: incidencia.urgencia 
         };
@@ -53,9 +53,11 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
         
         if (incidencia.id) {
             response = await incidenciaService.actualizarIncidencia(datos, incidencia.id);
-            const incidenciaActualizar = listaIncidencias.value.find(item => item.id === incidencia.id);
-            Object.assign(incidenciaActualizar, datos);
-            incidencia.id = '';
+            if(!response.error){
+                const incidenciaActualizar = listaIncidencias.value.find(item => item.id === incidencia.id);
+                Object.assign(incidenciaActualizar, datos);
+                incidencia.id = '';
+            }
         } 
         else {
             const nuevoId = generarId();

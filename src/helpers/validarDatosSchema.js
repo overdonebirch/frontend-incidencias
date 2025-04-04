@@ -1,11 +1,10 @@
 import Ajv from "ajv";
-import ajvErrors from "ajv-errors";
 import { useAlertasStore } from "../stores/alertasStore";
 const ajv = new Ajv({ 
   allErrors: true,
   strict: false 
 });
-ajvErrors(ajv);
+
 
 export const validarCampos = (schema, datos) => {
 
