@@ -16,7 +16,6 @@ watch(urgenciaSeleccionada,() => {  incidenciasStore.filtrarPorUrgencia(urgencia
 onMounted(async () => {
   await incidenciasStore.obtenerIncidencias();
   await incidenciasStore.obtenerSchema();
-
 })
 
 </script>
@@ -45,6 +44,9 @@ onMounted(async () => {
                 <v-select class="w-75 mx-auto rounded-lg" label="Filtrar por urgencia"   variant="underlined"
                 v-model="urgenciaSeleccionada"
                 :items="incidenciasStore.urgenciasDisponibles"></v-select>
+              </v-col>
+              <v-col>
+                <v-select class="w-75 mx-auto " label="Filtrar por fecha"   variant="underlined"></v-select>
               </v-col>
             </v-row>
 

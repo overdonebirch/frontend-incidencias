@@ -1,6 +1,7 @@
 <script setup>
 
 import { useIncidenciasStore } from '../stores/incidenciasStore';
+import { formatearFecha } from '../helpers/formatearFecha.js';
 const incidenciasStore = useIncidenciasStore();
 
 const props = defineProps({
@@ -18,7 +19,9 @@ const props = defineProps({
     <div style="width: 500px;">
       <div>Titulo : {{ incidencia.titulo }}</div>
       <div>Descripcion : {{ incidencia.descripcion }}</div>
-      <div>urgencia : {{ incidencia.urgencia }}</div>
+      <div>Urgencia : {{ incidencia.urgencia }}</div>
+      <div>Fecha Alta : {{ formatearFecha(incidencia.created_at)}}</div>
+      {{ console.log(typeof incidencia.created_at ) }}
     </div>
     <div class="d-flex flex-column ga-2">
       <v-btn @click="incidenciasStore.modoActualizar(incidencia.id)">Actualizar</v-btn>

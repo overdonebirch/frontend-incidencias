@@ -58,7 +58,7 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
             urgencia: incidencia.urgencia 
         };
         let response;
-        
+        let resJson;
         if (incidencia.id) {
             response = await incidenciaService.actualizarIncidencia(datos, incidencia.id);
             if(!response.error){
@@ -66,22 +66,27 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
                 Object.assign(incidenciaActualizar, datos);
                 incidencia.id = '';
             }
+            resJson = await response.json();
         } 
         else {
             const nuevoId = generarId();
             datos.id = nuevoId;
-            //Se validan los inputs del form con el esquema :
 
+            //Se validan los inputs del form con el esquema :
             if(!validarCampos(jsonSchema.value,datos)){
                 return;
             } 
+            //Obtengo la incidencia y su fecha de creacion desde el backend
             response = await incidenciaService.crearIncidencia(datos);
+            resJson = await response.json();
+            const incidenciaCreada = resJson.incidencia
+            datos.created_at = incidenciaCreada.created_at;
+
             listaIncidencias.value.push({...datos});
         }
         
 
         e.target.reset();
-        const resJson = await response.json();
         const { message } = resJson;
         alertasStore.agregarAlerta("success",message);
     }
