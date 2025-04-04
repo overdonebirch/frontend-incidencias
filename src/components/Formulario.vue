@@ -3,7 +3,7 @@
     import { useIncidenciasStore } from '../stores/incidenciasStore';
     const incidenciasStore = useIncidenciasStore();
     const emits = defineEmits(['handleSubmit'])
-    const urgencias = ref(['Muy Alta', 'Alta', 'Media', 'Baja'])
+
     const reglasTexto = [
         value => Boolean(value) || 'El campo es necesario',
     ]
@@ -37,7 +37,7 @@
             <v-col cols="12" class="pa-0">
                 <v-select 
                      v-model="incidenciasStore.incidencia.urgencia"
-                    :items="urgencias" 
+                    :items="incidenciasStore.urgencias" 
                     label="Selecciona urgencia"
                     variant="outlined"
                 ></v-select>

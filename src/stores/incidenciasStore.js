@@ -1,16 +1,20 @@
 import { defineStore } from "pinia";
-import { reactive, ref } from "vue";
+import { reactive, ref, watch } from "vue";
 
 import { useAlertasStore } from "../stores/alertasStore";
 import { generarId } from "../helpers/generarId.js";
 import { IncidenciaService } from "../services/incidenciasService.js";
 import { validarCampos } from "../helpers/validarDatossChema.js";
+import { ordenarPorUrgenciaSeleccionada,ordenarPorUrgenciasEstandar } from "../helpers/incidencias/filtrarUrgencia.js";
 
 export const useIncidenciasStore = defineStore('incidencias', () => {
     const alertasStore = useAlertasStore();
     const urlBack = "http://localhost:8000/incidencias";
     const incidenciaService = IncidenciaService();
     const cargarFormulario = ref(false);
+    const urgencias = ref(['Muy Alta', 'Alta', 'Media', 'Baja']) //El listado de todas las urgencias posibles
+    const urgenciasDisponibles = ref(null) // El listado de las urgencias solo de las incidencias creadas
+
     const incidencia = reactive({
         id: '',
         titulo: '',
@@ -20,6 +24,10 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
     const listaIncidencias = ref([]);
     const jsonSchema = ref(null);
 
+    watch(listaIncidencias, () => {
+        urgenciasDisponibles.value = [...new Set(listaIncidencias.value.map(item => item.urgencia))]
+        ordenarPorUrgenciasEstandar(urgenciasDisponibles.value);
+    })
     async function obtenerSchema() {
         jsonSchema.value = await incidenciaService.obtenerSchema();
         cargarFormulario.value = true;
@@ -78,15 +86,22 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
         alertasStore.agregarAlerta("success",message);
     }
 
+    function filtrarPorUrgencia(urgenciaSeleccionada){
+        ordenarPorUrgenciaSeleccionada(listaIncidencias.value,urgenciaSeleccionada);
+    }
+
     return {
         incidencia,
         listaIncidencias,
         jsonSchema,
         cargarFormulario,
+        urgencias,
+        urgenciasDisponibles,
         eliminarIncidencia,
         modoActualizar,
         obtenerIncidencias,
         handleSubmit,
-        obtenerSchema
+        obtenerSchema,
+        filtrarPorUrgencia
     }
 })
