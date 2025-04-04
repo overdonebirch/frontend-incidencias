@@ -6,6 +6,7 @@ import { generarId } from "../helpers/generarId.js";
 import { IncidenciaService } from "../services/incidenciasService.js";
 import { validarCampos } from "../helpers/validarDatossChema.js";
 import { ordenarPorUrgenciaSeleccionada,ordenarPorUrgenciasEstandar } from "../helpers/incidencias/filtrarUrgencia.js";
+import { ordenarPorFechas } from "../helpers/incidencias/filtrarFechas.js";
 
 export const useIncidenciasStore = defineStore('incidencias', () => {
     const alertasStore = useAlertasStore();
@@ -94,6 +95,9 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
     function filtrarPorUrgencia(urgenciaSeleccionada){
         ordenarPorUrgenciaSeleccionada(listaIncidencias.value,urgenciaSeleccionada);
     }
+    function filtrarPorFechas(orden){
+        ordenarPorFechas(listaIncidencias.value,orden)
+    }
 
     return {
         incidencia,
@@ -107,6 +111,7 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
         obtenerIncidencias,
         handleSubmit,
         obtenerSchema,
-        filtrarPorUrgencia
+        filtrarPorUrgencia,
+        filtrarPorFechas
     }
 })
