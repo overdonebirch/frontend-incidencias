@@ -1,7 +1,6 @@
 export const formatearFecha = (fecha) => {
     fecha = new Date(fecha);
     console.log("Formateando fecha");
-    debugger
     const fechaFormateada = fecha.toLocaleString('es', {
         day: 'numeric',
         month: 'long',
