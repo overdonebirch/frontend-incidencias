@@ -34,7 +34,7 @@ onMounted(async () => {
         class="mb-3" text="asdasdasd">
       </v-alert>
       <!-- Mostrar Formulario -->
-      <Formulario></Formulario>
+      <Formulario :modo="'Creacion'"></Formulario>
       <v-row>
         <v-col cols="12">
           <div v-if="incidenciasStore.listaIncidencias.length <= 0"

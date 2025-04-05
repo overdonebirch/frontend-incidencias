@@ -1,11 +1,10 @@
 import { defineStore } from "pinia";
 import { reactive, ref, watch } from "vue";
-
 import { useAlertasStore } from "../stores/alertasStore";
 import { generarId } from "../helpers/generarId.js";
 import { IncidenciaService } from "../services/incidenciasService.js";
 import { validarCampos } from "../helpers/validarDatossChema.js";
-import { ordenarPorUrgenciaSeleccionada,ordenarPorUrgenciasEstandar } from "../helpers/incidencias/filtrarUrgencia.js";
+import { ordenarPorUrgenciaSeleccionada, ordenarPorUrgenciasEstandar } from "../helpers/incidencias/filtrarUrgencia.js";
 import { ordenarPorFechas } from "../helpers/incidencias/filtrarFechas.js";
 
 export const useIncidenciasStore = defineStore('incidencias', () => {
@@ -52,7 +51,7 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
         window.scrollTo({
             top: 0,
             behavior: 'smooth' // Para un desplazamiento suave
-          });
+        });
     }
     const modoAgregar = (e) => {
         console.log(e);
@@ -63,52 +62,68 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
             urgencia: ''
         })
     }
-    const handleSubmit = async (e) => {
+    const crearIncidencia = async (e, incidenciaNueva) => {
+        debugger;
+        const nuevoId = generarId();
+        incidenciaNueva.id = nuevoId;
 
-        const datos = { 
-            titulo: incidencia.titulo, 
-            descripcion: incidencia.descripcion, 
-            urgencia: incidencia.urgencia 
+        //Se validan los inputs del form con el esquema :
+        if (!validarCampos(jsonSchema.value, incidenciaNueva)) {
+            return;
+        }
+        //Obtengo la incidencia y su fecha de creacion desde el backend
+        const response = await incidenciaService.crearIncidencia(incidenciaNueva);
+        const resJson = await response.json();
+        const incidenciaCreada = resJson.incidencia
+        incidenciaNueva.created_at = incidenciaCreada.created_at;
+
+        listaIncidencias.value.push({ ...incidenciaNueva });
+  
+        limpiarCamposIncidencia(incidenciaNueva);
+        e.reset();
+        const { message } = resJson;
+        alertasStore.agregarAlerta("success", message);
+    }
+    const actualizarIncidencia = async (e) => {
+
+        const datos = {
+            titulo: incidencia.titulo,
+            descripcion: incidencia.descripcion,
+            urgencia: incidencia.urgencia
         };
         let response;
         let resJson;
         if (incidencia.id) {
             response = await incidenciaService.actualizarIncidencia(datos, incidencia.id);
-            if(!response.error){
+            if (!response.error) {
                 const incidenciaActualizar = listaIncidencias.value.find(item => item.id === incidencia.id);
                 Object.assign(incidenciaActualizar, datos);
                 incidencia.id = '';
             }
             resJson = await response.json();
-        } 
-        else {
-            const nuevoId = generarId();
-            datos.id = nuevoId;
-
-            //Se validan los inputs del form con el esquema :
-            if(!validarCampos(jsonSchema.value,datos)){
-                return;
-            } 
-            //Obtengo la incidencia y su fecha de creacion desde el backend
-            response = await incidenciaService.crearIncidencia(datos);
-            resJson = await response.json();
-            const incidenciaCreada = resJson.incidencia
-            datos.created_at = incidenciaCreada.created_at;
-
-            listaIncidencias.value.push({...datos});
         }
-        
-
         e.target.reset();
         const { message } = resJson;
-        alertasStore.agregarAlerta("success",message);
+        alertasStore.agregarAlerta("success", message);
     }
-
-    function filtrarPorUrgencia(urgenciaSeleccionada){
-        ordenarPorUrgenciaSeleccionada(listaIncidencias.value,urgenciaSeleccionada);
+    function limpiarCamposIncidencia(incidencia) {
+        // Eliminar todas las propiedades del objeto
+        Object.keys(incidencia).forEach(key => {
+            delete incidencia[key];
+        });
+    
+        // Asignar solo las propiedades deseadas
+        incidencia.id = '';
+        incidencia.titulo = '';
+        incidencia.descripcion = '';
+        incidencia.urgencia = '';
     }
-    function filtrarPorFechas(orden){
-        ordenarPorFechas(listaIncidencias.value,orden)
+    
+    function filtrarPorUrgencia(urgenciaSeleccionada) {
+        ordenarPorUrgenciaSeleccionada(listaIncidencias.value, urgenciaSeleccionada);
+    }
+    function filtrarPorFechas(orden) {
+        ordenarPorFechas(listaIncidencias.value, orden)
     }
 
     return {
@@ -118,11 +133,11 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
         cargarFormulario,
         urgencias,
         urgenciasDisponibles,
+        crearIncidencia,
         eliminarIncidencia,
         modoActualizar,
         modoAgregar,
         obtenerIncidencias,
-        handleSubmit,
         obtenerSchema,
         filtrarPorUrgencia,
         filtrarPorFechas
