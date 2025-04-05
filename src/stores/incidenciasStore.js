@@ -54,7 +54,15 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
             behavior: 'smooth' // Para un desplazamiento suave
           });
     }
-
+    const modoAgregar = (e) => {
+        console.log(e);
+        Object.assign(incidencia, {
+            id: '',
+            titulo: '',
+            descripcion: '',
+            urgencia: ''
+        })
+    }
     const handleSubmit = async (e) => {
 
         const datos = { 
@@ -112,6 +120,7 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
         urgenciasDisponibles,
         eliminarIncidencia,
         modoActualizar,
+        modoAgregar,
         obtenerIncidencias,
         handleSubmit,
         obtenerSchema,

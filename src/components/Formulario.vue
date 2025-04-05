@@ -14,7 +14,7 @@
 
 
 <template>
-    <v-form class="pa-10" @submit.prevent="incidenciasStore.handleSubmit">
+    <v-form  ref="formRef" class="pa-10" @submit.prevent="incidenciasStore.handleSubmit">
         <v-row>
             <v-col cols="12" class="pa-0">
                 <v-text-field 
@@ -42,8 +42,12 @@
                     variant="outlined"
                 ></v-select>
             </v-col>
-            <v-col cols="12" class="pa-0 text-end ">
+
+            <v-col cols="12" class="pa-0 text-end">
+                <v-btn class="mr-3 " color="deep-orange-lighten-3" v-if="incidenciasStore.incidencia.id"
+                @click="incidenciasStore.modoAgregar()">Cancelar Actualizacion</v-btn>
                 <v-btn class="mx-auto" type="submit">{{ textoSubmit }}</v-btn>
+ 
             </v-col>
         </v-row>
     </v-form>
