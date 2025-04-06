@@ -68,7 +68,7 @@ const configDialog = computed(() => {
 </script>
 
 <template>
-  <v-sheet class="mb-5 d-flex justify-space-evenly pa-5" color="blue-grey-lighten-4 rounded-lg">
+  <v-sheet class="mb-5 d-flex justify-space-evenly pa-5" color="green-lighten-4 rounded-lg">
     <!-- Usar el componente de diálogo genérico -->
     <Dialog
       v-if="tipoDialog"
@@ -87,14 +87,14 @@ const configDialog = computed(() => {
     </Dialog>
     
     <div style="width: 500px;">
-      <div>Título: {{ incidencia.titulo }}</div>
-      <div>Descripción: {{ incidencia.descripcion }}</div>
-      <div>Urgencia: {{ incidencia.urgencia }}</div>
-      <div>Fecha Alta: {{ formatearFecha(incidencia.created_at) }}</div>
+      <div class="text-blue-grey-darken-1"><span class="font-weight-bold text text-light-blue-darken-4">Título:</span> {{ incidencia.titulo }}</div>
+      <div class="text-blue-grey-darken-1"><span class="font-weight-bold text text-light-blue-darken-4">Descripcion:</span>{{ incidencia.descripcion }}</div>
+      <div class="text-blue-grey-darken-1"><span class="font-weight-bold text text-light-blue-darken-4">Urgencia:</span>{{ incidencia.urgencia }}</div>
+      <div class="text-blue-grey-darken-1"><span class="font-weight-bold text text-light-blue-darken-4">Fecha Alta:</span> {{ formatearFecha(incidencia.created_at) }}</div>
     </div>
     
     <div class="d-flex flex-column ga-2">
-      <v-btn @click="abrirDialogActualizar">Actualizar</v-btn>
+      <v-btn color="grey-lighten-2"@click="abrirDialogActualizar">Actualizar</v-btn>
       <v-btn color="deep-orange-lighten-3" @click="abrirDialogEliminar">Eliminar</v-btn>
     </div>
   </v-sheet>
