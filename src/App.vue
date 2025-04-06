@@ -1,67 +1,11 @@
 <script setup>
 
-import { ref, reactive, computed, onMounted, watch } from 'vue'
-
-import Incidencia from './components/Incidencia.vue';
-import Formulario from './components/Formulario.vue';
-import { useIncidenciasStore } from './stores/incidenciasStore.js';
-import GlobalAlerts from './components/GlobalAlerts.vue';
-const incidenciasStore = useIncidenciasStore();
-
-const mostrarIncidencias = ref(false)
-const urgenciaSeleccionada = ref(null);
-const tiempoSeleccionado = ref(null);
-
-watch(tiempoSeleccionado, () => {incidenciasStore.filtrarPorFechas(tiempoSeleccionado.value)})
-watch(urgenciaSeleccionada, () => { incidenciasStore.filtrarPorUrgencia(urgenciaSeleccionada.value); })
-onMounted(async () => {
-  await incidenciasStore.obtenerIncidencias();
-  await incidenciasStore.obtenerSchema();
-})
 
 </script>
 
 <template>
   <v-app>
-  
-    <!-- Spinner de carga -->
-    <div class="text-center pt-16" v-if="!incidenciasStore.cargarFormulario">
-      <v-progress-circular color="primary" indeterminate></v-progress-circular>
-    </div>
-
-    <v-container class="pt-10" style="max-width: 800px" v-if="incidenciasStore.cargarFormulario">
-      <!-- Alertas -->
-      <GlobalAlerts />
-      <!-- Mostrar Formulario -->
-      <Formulario :modo="'Creacion'"></Formulario>
-      <v-row>
-        <v-col cols="12">
-          <div v-if="incidenciasStore.listaIncidencias.length <= 0"
-            class="text-center text-h5 amber text-blue-grey-lighten-3">--No hay datos--</div>
-          <!-- Boton de mostrar incidencias y filtros -->
-          <v-col v-else cols="12" class="pa-0 mt-16 text-center mb-10">
-            <v-btn @click="() => mostrarIncidencias = !mostrarIncidencias">Mostrar Incidencias</v-btn>
-          </v-col>
-          <v-col col="12" v-if="mostrarIncidencias && incidenciasStore.listaIncidencias.length > 0">
-            <v-row>
-              <v-col>
-                <v-select class="w-75 mx-auto rounded-lg" label="Filtrar por urgencia" variant="underlined"
-                  v-model="urgenciaSeleccionada" :items="incidenciasStore.urgenciasDisponibles"></v-select>
-              </v-col>
-              <v-col>
-                <v-select class="w-75 mx-auto " label="Filtrar por fecha" v-model="tiempoSeleccionado"
-                  :items="['Mas Recientes', 'Mas Antiguas']" variant="underlined"></v-select>
-              </v-col>
-            </v-row>
-            <!-- Listado de incidencias -->
-            <v-col cols="12">
-              <Incidencia v-for="incidencia in incidenciasStore.listaIncidencias" :incidencia="incidencia" />
-            </v-col>
-          </v-col>
-
-        </v-col>
-      </v-row>
-    </v-container>
+    <RouterView></RouterView>
   </v-app>
 </template>
 
