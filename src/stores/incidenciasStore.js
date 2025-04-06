@@ -6,6 +6,7 @@ import { IncidenciaService } from "../services/incidenciasService.js";
 import { validarCampos } from "../helpers/validarDatossChema.js";
 import { ordenarPorUrgenciaSeleccionada, ordenarPorUrgenciasEstandar } from "../helpers/incidencias/filtrarUrgencia.js";
 import { ordenarPorFechas } from "../helpers/incidencias/filtrarFechas.js";
+import { ca } from "vuetify/locale";
 
 export const useIncidenciasStore = defineStore('incidencias', () => {
     const alertasStore = useAlertasStore();
@@ -28,12 +29,13 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
         urgenciasDisponibles.value = [...new Set(listaIncidencias.value.map(item => item.urgencia))]
         ordenarPorUrgenciasEstandar(urgenciasDisponibles.value);
     })
+
     async function obtenerSchema() {
         jsonSchema.value = await incidenciaService.obtenerSchema();
         cargarFormulario.value = true;
     }
-    async function obtenerIncidencias() {
 
+    async function obtenerIncidencias() {
         listaIncidencias.value = await incidenciaService.obtenerIncidencias();
     }
 
@@ -53,17 +55,7 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
             behavior: 'smooth' // Para un desplazamiento suave
         });
     }
-    const modoAgregar = (e) => {
-        console.log(e);
-        Object.assign(incidencia, {
-            id: '',
-            titulo: '',
-            descripcion: '',
-            urgencia: ''
-        })
-    }
     const crearIncidencia = async (e, incidenciaNueva) => {
-        debugger;
         const nuevoId = generarId();
         incidenciaNueva.id = nuevoId;
 
@@ -72,53 +64,59 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
             return;
         }
         //Obtengo la incidencia y su fecha de creacion desde el backend
-        const response = await incidenciaService.crearIncidencia(incidenciaNueva);
-        const resJson = await response.json();
-        const incidenciaCreada = resJson.incidencia
-        incidenciaNueva.created_at = incidenciaCreada.created_at;
+        try {
+            const response = await incidenciaService.crearIncidencia(incidenciaNueva);
+            const resJson = await response.json();
+            const incidenciaCreada = resJson.incidencia
+            incidenciaNueva.created_at = incidenciaCreada.created_at;
+            listaIncidencias.value.push({ ...incidenciaNueva });
+            limpiarCamposIncidencia(incidenciaNueva);
+            e.reset();
+            const { message } = resJson;
+            alertasStore.agregarAlerta("success", message);
+        }
+        catch (error) {
+            console.log(error)
+        }
 
-        listaIncidencias.value.push({ ...incidenciaNueva });
-  
-        limpiarCamposIncidencia(incidenciaNueva);
-        e.reset();
-        const { message } = resJson;
-        alertasStore.agregarAlerta("success", message);
+
     }
-    const actualizarIncidencia = async (e) => {
 
-        const datos = {
-            titulo: incidencia.titulo,
-            descripcion: incidencia.descripcion,
-            urgencia: incidencia.urgencia
-        };
+    const actualizarIncidencia = async (e) => {
+        debugger;
         let response;
         let resJson;
         if (incidencia.id) {
-            response = await incidenciaService.actualizarIncidencia(datos, incidencia.id);
-            if (!response.error) {
+            try {
+                response = await incidenciaService.actualizarIncidencia(incidencia, incidencia.id);
                 const incidenciaActualizar = listaIncidencias.value.find(item => item.id === incidencia.id);
-                Object.assign(incidenciaActualizar, datos);
-                incidencia.id = '';
+                Object.assign(incidenciaActualizar, incidencia);
+                limpiarCamposIncidencia(incidencia);
+                resJson = await response.json();
+                e.target.reset();
+                const { message } = resJson;
+                alertasStore.agregarAlerta("success", message);
             }
-            resJson = await response.json();
+            catch (error) {
+                console.log(error)
+            }
         }
-        e.target.reset();
-        const { message } = resJson;
-        alertasStore.agregarAlerta("success", message);
+
     }
+
     function limpiarCamposIncidencia(incidencia) {
         // Eliminar todas las propiedades del objeto
         Object.keys(incidencia).forEach(key => {
             delete incidencia[key];
         });
-    
+
         // Asignar solo las propiedades deseadas
         incidencia.id = '';
         incidencia.titulo = '';
         incidencia.descripcion = '';
         incidencia.urgencia = '';
     }
-    
+
     function filtrarPorUrgencia(urgenciaSeleccionada) {
         ordenarPorUrgenciaSeleccionada(listaIncidencias.value, urgenciaSeleccionada);
     }
@@ -134,9 +132,9 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
         urgencias,
         urgenciasDisponibles,
         crearIncidencia,
+        actualizarIncidencia,
         eliminarIncidencia,
         modoActualizar,
-        modoAgregar,
         obtenerIncidencias,
         obtenerSchema,
         filtrarPorUrgencia,

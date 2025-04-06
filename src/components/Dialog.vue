@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
-
+import { useIncidenciasStore } from '../stores/incidenciasStore.js';
+const incidenciasStore = useIncidenciasStore();
 const props = defineProps({
   mostrar: {
     type: Boolean,
@@ -53,7 +54,7 @@ const confirmarAccion = () => {
         </slot>
       </v-card-text>
       <v-card-actions>
-        <v-btn :color="colorBotonPrincipal" @click="confirmarAccion">{{ textoBotonPrincipal }}</v-btn>
+        <v-btn :color="colorBotonPrincipal" @click="confirmarAccion" v-if="!incidenciasStore.incidencia.id">{{ textoBotonPrincipal }}</v-btn>
         <v-btn @click="cerrarDialog">{{ textoBotonCancelar }}</v-btn>
       </v-card-actions>
     </v-card>
