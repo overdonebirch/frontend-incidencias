@@ -23,7 +23,7 @@ onMounted(async () => {
 
 <template>
   <v-app>
-    <GlobalAlerts />
+  
     <!-- Spinner de carga -->
     <div class="text-center pt-16" v-if="!incidenciasStore.cargarFormulario">
       <v-progress-circular color="primary" indeterminate></v-progress-circular>
@@ -31,7 +31,7 @@ onMounted(async () => {
 
     <v-container class="pt-10" style="max-width: 800px" v-if="incidenciasStore.cargarFormulario">
       <!-- Alertas -->
-      
+      <GlobalAlerts />
       <!-- Mostrar Formulario -->
       <Formulario :modo="'Creacion'"></Formulario>
       <v-row>

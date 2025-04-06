@@ -7,7 +7,7 @@ import { validarCampos } from "../helpers/validarDatossChema.js";
 import { ordenarPorUrgenciaSeleccionada, ordenarPorUrgenciasEstandar } from "../helpers/incidencias/filtrarUrgencia.js";
 import { ordenarPorFechas } from "../helpers/incidencias/filtrarFechas.js";
 import { ca } from "vuetify/locale";
-
+import { useDialogStore } from "./dialogStore.js";
 export const useIncidenciasStore = defineStore('incidencias', () => {
     const alertasStore = useAlertasStore();
     const urlBack = "http://localhost:8000/incidencias";
@@ -15,7 +15,7 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
     const cargarFormulario = ref(false);
     const urgencias = ref(['Muy Alta', 'Alta', 'Media', 'Baja']) //El listado de todas las urgencias posibles
     const urgenciasDisponibles = ref(null) // El listado de las urgencias solo de las incidencias creadas
-
+    const dialogStore = useDialogStore();
     const incidenciaActualizar = reactive({
         id: '',
         titulo: '',
@@ -42,6 +42,7 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
     function eliminarIncidencia(id) {
         incidenciaService.eliminarIncidencia(id);
         listaIncidencias.value = listaIncidencias.value.filter(item => item.id != id);
+        alertasStore.agregarAlerta("success", "Incidencia Eliminada");
     }
 
     const modoActualizar = (idInci) => {
@@ -82,6 +83,7 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
     }
 
     const actualizarIncidencia = async (e,incidenciaActualizar) => {
+        console.log(e);
 
         let response;
         let resJson;
@@ -95,11 +97,14 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
                 // e.reset();
                 const { message } = resJson;
                 alertasStore.agregarAlerta("success", message);
+                e.reset();
+                dialogStore.mostrarDialog = false;
             }
             catch (error) {
                 console.log(error)
             }
         }
+
 
     }
 

@@ -7,7 +7,7 @@ export const useAlertasStore = defineStore('alertas', () => {
     
     function agregarAlerta(tipo, mensaje) {
         const id = contadorId++;
-        const tiempo = 1000 + (contadorId * 500);
+        const tiempo = 500 + (contadorId * 300);
         listaAlertas.value.push({ id, tipo, mensaje });
         setTimeout(() => {
             eliminarAlerta(id);

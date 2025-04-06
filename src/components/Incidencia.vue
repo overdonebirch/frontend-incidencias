@@ -1,11 +1,13 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useIncidenciasStore } from '../stores/incidenciasStore';
+import { useDialogStore } from '../stores/dialogStore.js';
 import { formatearFecha } from '../helpers/formatearFecha.js';
 import Dialog from './Dialog.vue';
 import Formulario from './Formulario.vue';
 
 const incidenciasStore = useIncidenciasStore();
+const dialogStore = useDialogStore();
 
 const props = defineProps({
   incidencia: {
@@ -14,22 +16,21 @@ const props = defineProps({
   }
 });
 
-const mostrarDialog = ref(false);
 const tipoDialog = ref('');
 
 const abrirDialogEliminar = () => {
   tipoDialog.value = 'eliminar';
-  mostrarDialog.value = true;
+  dialogStore.mostrarDialog = true;
 };
 
 const abrirDialogActualizar = () => {
   incidenciasStore.modoActualizar(props.incidencia.id);
   tipoDialog.value = 'actualizar';
-  mostrarDialog.value = true;
+  dialogStore.mostrarDialog = true;
 };
 
 const cerrarDialog = () => {
-  mostrarDialog.value = false;
+  dialogStore.mostrarDialog = false;
   tipoDialog.value = '';
 };
 
@@ -71,7 +72,6 @@ const configDialog = computed(() => {
     <!-- Usar el componente de diálogo genérico -->
     <Dialog
       v-if="tipoDialog"
-      :mostrar="mostrarDialog"
       :titulo="configDialog.titulo"
       :contenido="configDialog.contenido"
       :colorTarjeta="configDialog.colorTarjeta"

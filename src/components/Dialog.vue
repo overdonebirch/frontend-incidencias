@@ -1,12 +1,10 @@
 <script setup>
 import { ref } from 'vue';
 import { useIncidenciasStore } from '../stores/incidenciasStore.js';
+import { useDialogStore } from '../stores/dialogStore.js';
+const dialogStore = useDialogStore();
 const incidenciasStore = useIncidenciasStore();
 const props = defineProps({
-  mostrar: {
-    type: Boolean,
-    required: true
-  },
   titulo: {
     type: String,
     required: true
@@ -45,7 +43,7 @@ const confirmarAccion = () => {
 </script>
 
 <template>
-  <v-dialog :model-value="mostrar" @update:model-value="cerrarDialog">
+  <v-dialog :model-value="dialogStore.mostrarDialog" @update:model-value="cerrarDialog">
     <v-card :color="colorTarjeta">
       <v-card-title>{{ titulo }}</v-card-title>
       <v-card-text>
