@@ -10,13 +10,14 @@ import Header from './Header.vue';
                 <LeftSideBar class="h-screen">
                     <v-list class=" h-100 d-flex flex-column justify-center ">
                         <v-list-item>
-                            <v-list-item-title class="text-h5 text-cyan-lighten-5 font-weight-bold">Crear
-                                Incidencia</v-list-item-title>
+                            <RouterLink class="text-decoration-none text-h5 text-cyan-lighten-5 font-weight-bold"
+                                :to="{ name: 'crear-incidencia' }">Crear Incidencia</RouterLink>
                         </v-list-item>
                         <v-list-item>
-                            <v-list-item-title class="text-h5 text-cyan-lighten-5 font-weight-bold">Listar
-                                Incidencias</v-list-item-title>
+                            <RouterLink class="text-decoration-none text-h5 text-cyan-lighten-5 font-weight-bold"
+                                :to="{ name: 'listar-incidencias' }">Listar Incidencias</RouterLink>
                         </v-list-item>
+
                     </v-list>
                 </LeftSideBar>
             </v-col>

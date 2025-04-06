@@ -12,7 +12,7 @@ const router = createRouter({
     },
     {
         path : '/listarIncidencias',
-        name : 'listarIncidencias',
+        name : 'listar-incidencias',
         component : ListarIncidenciasView
     }
   ]
