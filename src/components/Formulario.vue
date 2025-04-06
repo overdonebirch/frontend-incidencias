@@ -28,7 +28,7 @@ const incidenciaVinculada = computed(() => {
     if (props.modo == "Creacion")
         return incidenciaNueva
     else if (props.modo == "Edicion")
-        return incidenciasStore.incidencia
+        return incidenciasStore.incidenciaActualizar
 })
 const accionSubmit = computed(() => {
     if (props.modo == "Creacion")
@@ -41,7 +41,7 @@ const accionSubmit = computed(() => {
 
 
 <template>
-    <v-form ref="formRef" class="pa-10" @submit.prevent="accionSubmit($event.target, incidenciaNueva)">
+    <v-form ref="formRef" class="pa-10" @submit.prevent="accionSubmit($event.target, incidenciaVinculada)">
         <v-row>
             <v-col cols="12" class="pa-0">
                 <v-text-field required v-model="incidenciaVinculada.titulo" label="Titulo de Incidencia"

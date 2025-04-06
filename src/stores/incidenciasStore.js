@@ -16,7 +16,7 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
     const urgencias = ref(['Muy Alta', 'Alta', 'Media', 'Baja']) //El listado de todas las urgencias posibles
     const urgenciasDisponibles = ref(null) // El listado de las urgencias solo de las incidencias creadas
 
-    const incidencia = reactive({
+    const incidenciaActualizar = reactive({
         id: '',
         titulo: '',
         descripcion: '',
@@ -47,7 +47,7 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
     const modoActualizar = (idInci) => {
         const incidenciaEncontrada = listaIncidencias.value.find(item => item.id == idInci);
         const { id, titulo, descripcion, urgencia } = incidenciaEncontrada;
-        Object.assign(incidencia, {
+        Object.assign(incidenciaActualizar, {
             id, titulo, descripcion, urgencia
         })
         window.scrollTo({
@@ -79,19 +79,18 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
             console.log(error)
         }
 
-
     }
 
-    const actualizarIncidencia = async (e) => {
-        debugger;
+    const actualizarIncidencia = async (e,incidenciaActualizar) => {
+
         let response;
         let resJson;
-        if (incidencia.id) {
+        if (incidenciaActualizar.id) {
             try {
-                response = await incidenciaService.actualizarIncidencia(incidencia, incidencia.id);
-                const incidenciaActualizar = listaIncidencias.value.find(item => item.id === incidencia.id);
-                Object.assign(incidenciaActualizar, incidencia);
-                limpiarCamposIncidencia(incidencia);
+                response = await incidenciaService.actualizarIncidencia(incidenciaActualizar, incidenciaActualizar.id);
+                const incidencia = listaIncidencias.value.find(item => item.id === incidenciaActualizar.id);
+                Object.assign(incidencia, incidenciaActualizar);
+                limpiarCamposIncidencia(incidenciaActualizar);
                 resJson = await response.json();
                 e.target.reset();
                 const { message } = resJson;
@@ -125,7 +124,7 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
     }
 
     return {
-        incidencia,
+        incidenciaActualizar,
         listaIncidencias,
         jsonSchema,
         cargarFormulario,
