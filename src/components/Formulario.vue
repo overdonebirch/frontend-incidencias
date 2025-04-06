@@ -22,7 +22,7 @@ const reglasTexto = [
 ]
 const textoSubmit = computed(() => {
     if (props.modo == "Creacion")
-        return "Agregar Incidencai"
+        return "Agregar Incidencia"
     else if (props.modo == "Edicion")
         return "Actualizar Incidencia"
 })
