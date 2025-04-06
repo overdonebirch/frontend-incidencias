@@ -3,6 +3,8 @@ import { ref, reactive, computed } from 'vue'
 import { useIncidenciasStore } from '../stores/incidenciasStore';
 const incidenciasStore = useIncidenciasStore();
 const emits = defineEmits(['handleSubmit'])
+import { useAlertasStore } from '../stores/alertasStore.js';
+const alertasStore = useAlertasStore();
 const incidenciaNueva = reactive({
     id: '',
     titulo: '',

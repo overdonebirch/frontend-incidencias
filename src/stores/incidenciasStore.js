@@ -92,7 +92,7 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
                 Object.assign(incidencia, incidenciaActualizar);
                 limpiarCamposIncidencia(incidenciaActualizar);
                 resJson = await response.json();
-                e.target.reset();
+                // e.reset();
                 const { message } = resJson;
                 alertasStore.agregarAlerta("success", message);
             }

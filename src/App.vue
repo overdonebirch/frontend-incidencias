@@ -5,9 +5,9 @@ import { ref, reactive, computed, onMounted, watch } from 'vue'
 import Incidencia from './components/Incidencia.vue';
 import Formulario from './components/Formulario.vue';
 import { useIncidenciasStore } from './stores/incidenciasStore.js';
-import { useAlertasStore } from './stores/alertasStore.js';
+import GlobalAlerts from './components/GlobalAlerts.vue';
 const incidenciasStore = useIncidenciasStore();
-const alertasStore = useAlertasStore();
+
 const mostrarIncidencias = ref(false)
 const urgenciaSeleccionada = ref(null);
 const tiempoSeleccionado = ref(null);
@@ -23,6 +23,7 @@ onMounted(async () => {
 
 <template>
   <v-app>
+    <GlobalAlerts />
     <!-- Spinner de carga -->
     <div class="text-center pt-16" v-if="!incidenciasStore.cargarFormulario">
       <v-progress-circular color="primary" indeterminate></v-progress-circular>
@@ -30,9 +31,7 @@ onMounted(async () => {
 
     <v-container class="pt-10" style="max-width: 800px" v-if="incidenciasStore.cargarFormulario">
       <!-- Alertas -->
-      <v-alert v-for="alerta in alertasStore.listaAlertas" :title=alerta.tipo :type=alerta.tipo :text=alerta.mensaje
-        class="mb-3" text="asdasdasd">
-      </v-alert>
+      
       <!-- Mostrar Formulario -->
       <Formulario :modo="'Creacion'"></Formulario>
       <v-row>
