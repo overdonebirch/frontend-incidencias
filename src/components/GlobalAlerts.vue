@@ -6,7 +6,7 @@ const alertasStore = useAlertasStore();
 
 <template>
     <div class="global-alerts">
-        <v-alert v-for="(alerta, index) in alertasStore.listaAlertas" :key="index" :title="alerta.tipo"
+        <v-alert v-for="alerta in alertasStore.listaAlertas" :title="alerta.tipo"
             :type="alerta.tipo" :text="alerta.mensaje" class="mb-3 global-alert" elevation="6">
         </v-alert>
     </div>
@@ -17,7 +17,7 @@ const alertasStore = useAlertasStore();
 .global-alerts {
     position: fixed;
     top: 16px;
-    left: 50%;
+    left: 60%;
     transform: translateX(-50%);
     width: 80%;
     max-width: 500px;
