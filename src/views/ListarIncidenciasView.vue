@@ -46,11 +46,11 @@ onMounted(async () => {
                 class="text-center text-h5 amber text-blue-grey-lighten-3">--No hay datos--
             </div>
             <v-row v-else>
-                <v-col>
+                <v-col lg="6 "md="12">
                     <v-select class="w-75 mx-auto rounded-lg" label="Filtrar por urgencia" variant="underlined"
                         v-model="urgenciaSeleccionada" :items="incidenciasStore.urgenciasDisponibles"></v-select>
                 </v-col>
-                <v-col>
+                <v-col lg="6 "md="12">
                     <v-select class="w-75 mx-auto " label="Filtrar por fecha" v-model="tiempoSeleccionado"
                         :items="['Mas Recientes', 'Mas Antiguas']" variant="underlined"></v-select>
                 </v-col>
