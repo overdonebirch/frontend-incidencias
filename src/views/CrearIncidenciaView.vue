@@ -16,7 +16,7 @@ const tiempoSeleccionado = ref(null);
 watch(tiempoSeleccionado, () => { incidenciasStore.filtrarPorFechas(tiempoSeleccionado.value) })
 watch(urgenciaSeleccionada, () => { incidenciasStore.filtrarPorUrgencia(urgenciaSeleccionada.value); })
 onMounted(async () => {
-    await incidenciasStore.obtenerIncidencias();
+
     await incidenciasStore.obtenerSchema();
 })
 
@@ -27,22 +27,23 @@ onMounted(async () => {
 
     <GlobalAlerts />
     <!-- Spinner de carga -->
-    <div class="text-center pt-16" v-if="!incidenciasStore.cargarFormulario">
-        <v-progress-circular color="primary" indeterminate></v-progress-circular>
-    </div>
+
     <Layout>
 
-        <template v-slot:title v-if="incidenciasStore.cargarFormulario">
+        <template v-slot:title>
 
             <v-card color="teal-lighten-4" width="400" class="text-center pa-1 rounded-xl mt-10">
                 <v-card-text class="text-h4 white--text">
                     <h1 class="text-h4 font-weight-thin">Crea Una Incidencia</h1>
                 </v-card-text>
-              </v-card>
-
+            </v-card>
+            <div class="text-center pt-16" v-if="!incidenciasStore.cargarFormulario">
+                <v-progress-circular color="primary" indeterminate></v-progress-circular>
+            </div>
         </template>
         <template v-slot:body v-if="incidenciasStore.cargarFormulario">
             <Formulario :modo="'Creacion'"></Formulario>
+
         </template>
     </Layout>
 

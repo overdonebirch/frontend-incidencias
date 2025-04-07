@@ -2,10 +2,16 @@ const urlBack = "http://localhost:8000/incidencias";
 
 export const IncidenciaService = () => {
 
-    async function obtenerIncidencias() {
-        const datos = await fetch(urlBack);
+    async function obtenerIncidencias(pageNumber = null) {
+        let url = urlBack;
+        if(pageNumber){
+            url = `${urlBack}/?page=${pageNumber}`
+            console.log(url)
+        }  
+        const datos = await fetch(url);
         const resJson = await datos.json();
         return resJson;
+        
     }
 
     async function obtenerSchema() {

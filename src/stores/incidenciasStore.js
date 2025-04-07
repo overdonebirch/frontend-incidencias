@@ -9,21 +9,25 @@ import { ordenarPorFechas } from "../helpers/incidencias/filtrarFechas.js";
 import { ca } from "vuetify/locale";
 import { useDialogStore } from "./dialogStore.js";
 export const useIncidenciasStore = defineStore('incidencias', () => {
+
     const alertasStore = useAlertasStore();
     const urlBack = "http://localhost:8000/incidencias";
     const incidenciaService = IncidenciaService();
     const cargarFormulario = ref(false);
+    const cargarIncidencias = ref(false);
     const urgencias = ref(['Muy Alta', 'Alta', 'Media', 'Baja']) //El listado de todas las urgencias posibles
     const urgenciasDisponibles = ref(null) // El listado de las urgencias solo de las incidencias creadas
     const dialogStore = useDialogStore();
+    const jsonSchema = ref(null);
+    const totalPaginas = ref(null);
+    const listaIncidencias = ref([]);
     const incidenciaActualizar = reactive({
         id: '',
         titulo: '',
         descripcion: '',
         urgencia: ''
     })
-    const listaIncidencias = ref([]);
-    const jsonSchema = ref(null);
+
 
     watch(listaIncidencias, () => {
         urgenciasDisponibles.value = [...new Set(listaIncidencias.value.map(item => item.urgencia))]
@@ -35,8 +39,17 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
         cargarFormulario.value = true;
     }
 
-    async function obtenerIncidencias() {
-        listaIncidencias.value = await incidenciaService.obtenerIncidencias();
+    async function obtenerIncidencias(pageNumber = null) {
+        console.log(pageNumber);
+
+        cargarIncidencias.value = false;
+        const datos = await incidenciaService.obtenerIncidencias(pageNumber);
+        const {data} = datos;
+        const {last_page} = datos;
+        totalPaginas.value = last_page;
+        listaIncidencias.value = data;
+        cargarIncidencias.value = true;
+        return pageNumber;
     }
 
     function eliminarIncidencia(id) {
@@ -131,6 +144,8 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
         cargarFormulario,
         urgencias,
         urgenciasDisponibles,
+        totalPaginas,
+        cargarIncidencias,
         limpiarCamposIncidencia,
         crearIncidencia,
         actualizarIncidencia,

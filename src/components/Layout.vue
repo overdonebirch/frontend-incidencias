@@ -36,8 +36,18 @@ import Header from './Header.vue';
                             </slot>
 
                         </v-row>
+                        <v-row class="mt-15" justify="center">
+
+                            <slot name="footer">
+
+                            </slot>
+
+                        </v-row>
+
                     </v-col>
+
                 </v-row>
+
             </v-col>
         </v-row>
     </v-container>

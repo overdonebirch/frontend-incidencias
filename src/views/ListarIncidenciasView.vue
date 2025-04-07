@@ -27,40 +27,46 @@ onMounted(async () => {
 
     <GlobalAlerts />
     <!-- Spinner de carga -->
-    <div class="text-center pt-16" v-if="!incidenciasStore.cargarFormulario">
-        <v-progress-circular color="primary" indeterminate></v-progress-circular>
-    </div>
+
     <Layout>
 
-        <template v-slot:title v-if="incidenciasStore.cargarFormulario">
+        <template v-slot:title>
 
             <v-card color="teal-lighten-4" width="400" class="text-center pa-1 rounded-xl mt-10">
                 <v-card-text class="text-h4 white--text">
                     <h1 class="text-h4 font-weight-thin">Listado De Incidencias</h1>
                 </v-card-text>
             </v-card>
-
+            <div class="text-center pt-16" v-if="!incidenciasStore.cargarIncidencias">
+                <v-progress-circular color="primary" indeterminate></v-progress-circular>
+            </div>
         </template>
-        <template v-slot:body v-if="incidenciasStore.cargarFormulario">
+
+        <template v-slot:body v-if="incidenciasStore.cargarIncidencias">
             <div v-if="incidenciasStore.listaIncidencias.length <= 0"
                 class="text-center text-h5 amber text-blue-grey-lighten-3">--No hay datos--
             </div>
             <v-row v-else>
-                <v-col lg="6 "md="12">
+                <v-col lg="6 " md="12">
                     <v-select class="w-75 mx-auto rounded-lg" label="Filtrar por urgencia" variant="underlined"
                         v-model="urgenciaSeleccionada" :items="incidenciasStore.urgenciasDisponibles"></v-select>
                 </v-col>
-                <v-col lg="6 "md="12">
+                <v-col lg="6 " md="12">
                     <v-select class="w-75 mx-auto " label="Filtrar por fecha" v-model="tiempoSeleccionado"
                         :items="['Mas Recientes', 'Mas Antiguas']" variant="underlined"></v-select>
                 </v-col>
             </v-row>
             <!-- Listado de incidencias -->
             <v-col cols="12">
+
                 <Incidencia v-for="incidencia in incidenciasStore.listaIncidencias" :incidencia="incidencia" />
             </v-col>
 
 
+        </template>
+        <template v-slot:footer>
+            <v-pagination :total-visible="incidenciasStore.totalPaginas" :length="incidenciasStore.totalPaginas"
+                @update:modelValue="incidenciasStore.obtenerIncidencias($event)"></v-pagination>
         </template>
     </Layout>
 
