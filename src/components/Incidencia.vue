@@ -68,7 +68,7 @@ const configDialog = computed(() => {
 </script>
 
 <template>
-  <v-sheet class="mb-5 d-flex justify-space-evenly pa-5" color="green-lighten-4 rounded-lg">
+  <v-sheet class="mb-5 d-flex justify-space-evenly pa-5" color="blue-lighten-4 rounded-lg">
     <!-- Usar el componente de diálogo genérico -->
     <Dialog
       v-if="tipoDialog"
