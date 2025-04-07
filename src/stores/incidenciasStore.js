@@ -131,6 +131,7 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
         cargarFormulario,
         urgencias,
         urgenciasDisponibles,
+        limpiarCamposIncidencia,
         crearIncidencia,
         actualizarIncidencia,
         eliminarIncidencia,

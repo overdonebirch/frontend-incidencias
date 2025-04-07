@@ -32,6 +32,7 @@ const abrirDialogActualizar = () => {
 const cerrarDialog = () => {
   dialogStore.mostrarDialog = false;
   tipoDialog.value = '';
+  incidenciasStore.limpiarCamposIncidencia(incidenciasStore.incidenciaActualizar);
 };
 
 const confirmarAccion = () => {
