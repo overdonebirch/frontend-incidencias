@@ -51,10 +51,6 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
         Object.assign(incidenciaActualizar, {
             id, titulo, descripcion, urgencia
         })
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth' // Para un desplazamiento suave
-        });
     }
     const crearIncidencia = async (e, incidenciaNueva) => {
         const nuevoId = generarId();
