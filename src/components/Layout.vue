@@ -21,35 +21,31 @@ import Header from './Header.vue';
                     </v-list>
                 </LeftSideBar>
             </v-col>
-            <v-col cols="10">
-                <v-row justify="center">
-                    <v-col cols="12" class="d-flex flex-column align-center">
+            <v-col cols="10" class="d-flex flex-column min-h-screen justify-space-between">
+    <v-row justify="center">
+        <v-col cols="12" class="d-flex flex-column align-center flex-grow-1">
 
-                        <slot name="title">
+            <slot name="title" />
 
-                        </slot>
+            <v-row class="mt-15 flex-grow-1" justify="center">
+                <slot name="body" />
+            </v-row>
 
-                        <v-row class="mt-15" justify="center">
+            <v-row class="mt-15" justify="center">
+                <slot name="footer" />
+            </v-row>
 
-                            <slot name="body">
+        </v-col>
+    </v-row>
+</v-col>
 
-                            </slot>
 
-                        </v-row>
-                        <v-row class="mt-15" justify="center">
 
-                            <slot name="footer">
-
-                            </slot>
-
-                        </v-row>
-
-                    </v-col>
-
-                </v-row>
-
-            </v-col>
         </v-row>
     </v-container>
 </template>
-<style lang="scss" scoped></style>
+<style>
+.min-h-screen {
+    min-height: 90vh;
+}
+</style>

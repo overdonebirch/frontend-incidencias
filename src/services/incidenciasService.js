@@ -1,28 +1,38 @@
-const urlBack = "http://localhost:8000/incidencias";
 
 export const IncidenciaService = () => {
+    let urlGet = new URL("http://localhost:8000/incidencias");
+    let urlPost = "http://localhost:8000/incidencias";
 
-    async function obtenerIncidencias(pageNumber = null) {
-        let url = urlBack;
+    function seleccionarPagina(pageNumber){
         if(pageNumber){
-            url = `${urlBack}/?page=${pageNumber}`
-            console.log(url)
+            urlGet.searchParams.set("page", pageNumber);
         }  
-        const datos = await fetch(url);
+    }
+
+    function cambiarPaginacion(perPage){
+        if(perPage){
+            urlGet.searchParams.set("perPage", perPage);
+        }  
+    }
+
+    async function obtenerIncidencias() {
+   
+        console.log(urlGet);
+        const datos = await fetch(urlGet);
         const resJson = await datos.json();
         return resJson;
         
     }
 
     async function obtenerSchema() {
-        const datos = await fetch(`${urlBack}/jsonschema`);
+        const datos = await fetch(`${urlPost}/jsonschema`);
         const schema = await datos.json();
         return schema;
     }
    
     function eliminarIncidencia(id) {
         try {
-            fetch(`${urlBack}/${id}`, {
+            fetch(`${urlPost}/${id}`, {
                 method: 'DELETE'
             })
         }
@@ -30,12 +40,14 @@ export const IncidenciaService = () => {
             console.log(error);
         }
     }
+
     async function crearIncidencia(datos) {
-        const response = await agregarDatos(urlBack,datos,"POST");
+        const response = await agregarDatos(urlPost,datos,"POST");
         return response;
     }
+
     async function actualizarIncidencia(datos,id) {
-        const url = `${urlBack}/${id}`;
+        const url = `${urlPost}/${id}`;
         const response = await agregarDatos(url,datos,"PATCH");
         return response;
     }
@@ -61,6 +73,8 @@ export const IncidenciaService = () => {
         obtenerIncidencias,
         crearIncidencia,
         actualizarIncidencia,
-        obtenerSchema
+        obtenerSchema,
+        seleccionarPagina,
+        cambiarPaginacion
     }
 }

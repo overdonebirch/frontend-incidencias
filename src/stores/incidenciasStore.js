@@ -34,22 +34,25 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
         ordenarPorUrgenciasEstandar(urgenciasDisponibles.value);
     })
 
+    function seleccionarPagina(pagina){
+        incidenciaService.seleccionarPagina(pagina);
+        console.log(pagina);
+        obtenerIncidencias();
+    }
     async function obtenerSchema() {
         jsonSchema.value = await incidenciaService.obtenerSchema();
         cargarFormulario.value = true;
     }
 
-    async function obtenerIncidencias(pageNumber = null) {
-        console.log(pageNumber);
 
+    async function obtenerIncidencias() {
         cargarIncidencias.value = false;
-        const datos = await incidenciaService.obtenerIncidencias(pageNumber);
-        const {data} = datos;
-        const {last_page} = datos;
+        const datos = await incidenciaService.obtenerIncidencias();
+        const {data,last_page} = datos;
+        
         totalPaginas.value = last_page;
         listaIncidencias.value = data;
         cargarIncidencias.value = true;
-        return pageNumber;
     }
 
     function eliminarIncidencia(id) {
@@ -154,6 +157,7 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
         obtenerIncidencias,
         obtenerSchema,
         filtrarPorUrgencia,
-        filtrarPorFechas
+        filtrarPorFechas,
+        seleccionarPagina
     }
 })

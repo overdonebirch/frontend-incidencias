@@ -26,7 +26,7 @@ onMounted(async () => {
 <template>
 
     <GlobalAlerts />
-    <!-- Spinner de carga -->
+
 
     <Layout>
 
@@ -37,7 +37,8 @@ onMounted(async () => {
                     <h1 class="text-h4 font-weight-thin">Listado De Incidencias</h1>
                 </v-card-text>
             </v-card>
-            <div class="text-center pt-16" v-if="!incidenciasStore.cargarIncidencias">
+                <!-- Spinner de carga -->
+            <div class="text-center pt-16 min-h-screen " v-if="!incidenciasStore.cargarIncidencias">
                 <v-progress-circular color="primary" indeterminate></v-progress-circular>
             </div>
         </template>
@@ -66,7 +67,7 @@ onMounted(async () => {
         </template>
         <template v-slot:footer>
             <v-pagination :total-visible="incidenciasStore.totalPaginas" :length="incidenciasStore.totalPaginas"
-                @update:modelValue="incidenciasStore.obtenerIncidencias($event)"></v-pagination>
+                @update:modelValue="incidenciasStore.seleccionarPagina($event)"></v-pagination>
         </template>
     </Layout>
 
@@ -75,4 +76,8 @@ onMounted(async () => {
 
 
 
-<style lang="scss" scoped></style>
+<style>
+.min-h-screen {
+    min-height: 990px;
+}
+</style>
