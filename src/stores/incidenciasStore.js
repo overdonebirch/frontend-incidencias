@@ -36,8 +36,13 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
 
     function seleccionarPagina(pagina){
         incidenciaService.seleccionarPagina(pagina);
-        console.log(pagina);
+
         obtenerIncidencias();
+    }
+    function cambiarPaginacion(perPage){
+        incidenciaService.cambiarPaginacion(perPage);
+        obtenerIncidencias();
+
     }
     async function obtenerSchema() {
         jsonSchema.value = await incidenciaService.obtenerSchema();
@@ -49,7 +54,7 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
         cargarIncidencias.value = false;
         const datos = await incidenciaService.obtenerIncidencias();
         const {data,last_page} = datos;
-        
+
         totalPaginas.value = last_page;
         listaIncidencias.value = data;
         cargarIncidencias.value = true;
@@ -158,6 +163,7 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
         obtenerSchema,
         filtrarPorUrgencia,
         filtrarPorFechas,
-        seleccionarPagina
+        seleccionarPagina,
+        cambiarPaginacion
     }
 })

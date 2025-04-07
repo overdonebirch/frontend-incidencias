@@ -8,12 +8,12 @@ export const IncidenciaService = () => {
             urlGet.searchParams.set("page", pageNumber);
         }  
     }
-
     function cambiarPaginacion(perPage){
         if(perPage){
             urlGet.searchParams.set("perPage", perPage);
         }  
     }
+
 
     async function obtenerIncidencias() {
    

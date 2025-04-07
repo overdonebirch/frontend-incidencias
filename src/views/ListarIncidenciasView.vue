@@ -12,9 +12,11 @@ const incidenciasStore = useIncidenciasStore();
 const mostrarIncidencias = ref(false)
 const urgenciaSeleccionada = ref(null);
 const tiempoSeleccionado = ref(null);
+const paginacionSeleccionada = ref(null);
 
 watch(tiempoSeleccionado, () => { incidenciasStore.filtrarPorFechas(tiempoSeleccionado.value) })
 watch(urgenciaSeleccionada, () => { incidenciasStore.filtrarPorUrgencia(urgenciaSeleccionada.value); })
+watch(paginacionSeleccionada, () => { incidenciasStore.cambiarPaginacion(paginacionSeleccionada.value); })
 onMounted(async () => {
     await incidenciasStore.obtenerIncidencias();
     await incidenciasStore.obtenerSchema();
@@ -31,13 +33,12 @@ onMounted(async () => {
     <Layout>
 
         <template v-slot:title>
-
             <v-card color="teal-lighten-4" width="400" class="text-center pa-1 rounded-xl mt-10">
                 <v-card-text class="text-h4 white--text">
                     <h1 class="text-h4 font-weight-thin">Listado De Incidencias</h1>
                 </v-card-text>
             </v-card>
-                <!-- Spinner de carga -->
+            <!-- Spinner de carga -->
             <div class="text-center pt-16 min-h-screen " v-if="!incidenciasStore.cargarIncidencias">
                 <v-progress-circular color="primary" indeterminate></v-progress-circular>
             </div>
@@ -48,13 +49,19 @@ onMounted(async () => {
                 class="text-center text-h5 amber text-blue-grey-lighten-3">--No hay datos--
             </div>
             <v-row v-else>
-                <v-col lg="6 " md="12">
+                <v-col lg="4 " md="12">
                     <v-select class="w-75 mx-auto rounded-lg" label="Filtrar por urgencia" variant="underlined"
                         v-model="urgenciaSeleccionada" :items="incidenciasStore.urgenciasDisponibles"></v-select>
                 </v-col>
-                <v-col lg="6 " md="12">
+                <v-col lg="4 " md="12">
                     <v-select class="w-75 mx-auto " label="Filtrar por fecha" v-model="tiempoSeleccionado"
                         :items="['Mas Recientes', 'Mas Antiguas']" variant="underlined"></v-select>
+                </v-col>
+                <v-col lg="4" md="12">
+
+                    <v-select class="w-75 mx-auto " label="Paginar" v-model="paginacionSeleccionada"
+                    :items="[5,10,15]" variant="outlined"></v-select>
+
                 </v-col>
             </v-row>
             <!-- Listado de incidencias -->
