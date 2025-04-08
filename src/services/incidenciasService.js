@@ -18,6 +18,11 @@ export const IncidenciaService = () => {
             urlGet.searchParams.set("urgencia", urgencia);
         }  
     }
+    function seleccionarAntiguedad(fecha){
+        if(fecha){
+            urlGet.searchParams.set("fecha", fecha);
+        }  
+    }
 
     async function obtenerIncidencias() {
         const datos = await fetch(urlGet);
@@ -83,6 +88,7 @@ export const IncidenciaService = () => {
         obtenerSchema,
         seleccionarPagina,
         seleccionarUrgencia,
+        seleccionarAntiguedad,
         cambiarPaginacion
     }
 }

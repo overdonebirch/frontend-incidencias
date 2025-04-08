@@ -4,7 +4,6 @@ import { useAlertasStore } from "../stores/alertasStore";
 import { generarId } from "../helpers/generarId.js";
 import { IncidenciaService } from "../services/incidenciasService.js";
 import { validarCampos } from "../helpers/validarDatossChema.js";
-import { ordenarPorUrgenciaSeleccionada, ordenarPorUrgenciasEstandar } from "../helpers/incidencias/filtrarUrgencia.js";
 import { ordenarPorFechas } from "../helpers/incidencias/filtrarFechas.js";
 import { ca } from "vuetify/locale";
 import { useDialogStore } from "./dialogStore.js";
@@ -34,7 +33,7 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
         jsonSchema.value = await incidenciaService.obtenerSchema();
         cargarFormulario.value = true;
     }
-    
+
     async function obtenerIncidencias() {
         cargarIncidencias.value = false;
         const datos = await incidenciaService.obtenerIncidencias();
@@ -142,7 +141,15 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
     }
 
     function filtrarPorFechas(orden) {
-        ordenarPorFechas(listaIncidencias.value, orden)
+        orden = orden.trim();
+        if(orden == 'Mas Recientes'){
+            orden = 'desc';
+        }
+        else if(orden == 'Mas Antiguas'){
+            orden = 'asc';
+        }
+        incidenciaService.seleccionarAntiguedad(orden);
+        obtenerIncidencias();
     }
 
     return {
