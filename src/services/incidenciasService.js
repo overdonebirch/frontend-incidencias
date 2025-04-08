@@ -1,7 +1,7 @@
 
 export const IncidenciaService = () => {
     let urlGet = new URL("http://localhost:8000/incidencias");
-    let urlPost = "http://localhost:8000/incidencias";
+    let urlEstatica = "http://localhost:8000/incidencias";
 
     function seleccionarPagina(pageNumber){
         if(pageNumber){
@@ -13,26 +13,32 @@ export const IncidenciaService = () => {
             urlGet.searchParams.set("perPage", perPage);
         }  
     }
-
+    function seleccionarUrgencia(urgencia){
+        if(urgencia){
+            urlGet.searchParams.set("urgencia", urgencia);
+        }  
+    }
 
     async function obtenerIncidencias() {
-   
-        console.log(urlGet);
         const datos = await fetch(urlGet);
         const resJson = await datos.json();
         return resJson;
-        
     }
 
     async function obtenerSchema() {
-        const datos = await fetch(`${urlPost}/jsonschema`);
+        const datos = await fetch(`${urlEstatica}/jsonschema`);
         const schema = await datos.json();
         return schema;
     }
    
+    async function obtenerUrgenciasExistentes() {
+        const datos = await fetch(`${urlEstatica}/urgencias`);
+        const urgencias = await datos.json();
+        return urgencias;
+    }
     function eliminarIncidencia(id) {
         try {
-            fetch(`${urlPost}/${id}`, {
+            fetch(`${urlEstatica}/${id}`, {
                 method: 'DELETE'
             })
         }
@@ -42,12 +48,12 @@ export const IncidenciaService = () => {
     }
 
     async function crearIncidencia(datos) {
-        const response = await agregarDatos(urlPost,datos,"POST");
+        const response = await agregarDatos(urlEstatica,datos,"POST");
         return response;
     }
 
     async function actualizarIncidencia(datos,id) {
-        const url = `${urlPost}/${id}`;
+        const url = `${urlEstatica}/${id}`;
         const response = await agregarDatos(url,datos,"PATCH");
         return response;
     }
@@ -71,10 +77,12 @@ export const IncidenciaService = () => {
     return {
         eliminarIncidencia,
         obtenerIncidencias,
+        obtenerUrgenciasExistentes,
         crearIncidencia,
         actualizarIncidencia,
         obtenerSchema,
         seleccionarPagina,
+        seleccionarUrgencia,
         cambiarPaginacion
     }
 }

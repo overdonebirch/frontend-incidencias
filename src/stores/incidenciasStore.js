@@ -29,31 +29,20 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
     })
 
 
-    watch(listaIncidencias, () => {
-        urgenciasDisponibles.value = [...new Set(listaIncidencias.value.map(item => item.urgencia))]
-        ordenarPorUrgenciasEstandar(urgenciasDisponibles.value);
-    })
-
-    function seleccionarPagina(pagina){
-        incidenciaService.seleccionarPagina(pagina);
-
-        obtenerIncidencias();
-    }
-    function cambiarPaginacion(perPage){
-        incidenciaService.cambiarPaginacion(perPage);
-        obtenerIncidencias();
-
-    }
+   
     async function obtenerSchema() {
         jsonSchema.value = await incidenciaService.obtenerSchema();
         cargarFormulario.value = true;
     }
-
-
+    
     async function obtenerIncidencias() {
         cargarIncidencias.value = false;
         const datos = await incidenciaService.obtenerIncidencias();
         const {data,last_page} = datos;
+        
+        //Obtengo las urgencias cada vez que cargo todas las incidencias : 
+        urgenciasDisponibles.value = await incidenciaService.obtenerUrgenciasExistentes();
+
 
         totalPaginas.value = last_page;
         listaIncidencias.value = data;
@@ -138,9 +127,20 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
         incidencia.urgencia = '';
     }
 
-    function filtrarPorUrgencia(urgenciaSeleccionada) {
-        ordenarPorUrgenciaSeleccionada(listaIncidencias.value, urgenciaSeleccionada);
+    function seleccionarPagina(pagina){
+        incidenciaService.seleccionarPagina(pagina);
+        obtenerIncidencias();
     }
+    function cambiarPaginacion(perPage){
+        incidenciaService.cambiarPaginacion(perPage);
+        obtenerIncidencias();
+    }
+    function filtrarPorUrgencia(urgenciaSeleccionada) {
+        urgenciaSeleccionada = urgenciaSeleccionada.trim();
+        incidenciaService.seleccionarUrgencia(urgenciaSeleccionada);
+        obtenerIncidencias();
+    }
+
     function filtrarPorFechas(orden) {
         ordenarPorFechas(listaIncidencias.value, orden)
     }
