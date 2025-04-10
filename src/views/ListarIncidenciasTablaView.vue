@@ -13,6 +13,7 @@ onMounted(async () => {
 
 const incidenciasStore = useIncidenciasStore();
 const itemsPerPage = ref(5);
+const page = ref(1);
 
 const headers = ref([
     { title: 'Titulo', key: 'titulo' },
@@ -23,6 +24,14 @@ const headers = ref([
 
 ])
 
+const handleUpdate = (options) => {
+
+    if(options.itemsPerPage)
+        incidenciasStore.cambiarPaginacion(options.itemsPerPage);
+    if(options.page)
+        incidenciasStore.seleccionarPagina(options.page);
+
+}
 
 </script>
 
@@ -39,10 +48,11 @@ const headers = ref([
                 <!-- Listado de incidencias -->
                 <v-col cols="12">
                     <v-data-table-server v-model:items-per-page="itemsPerPage" :headers="headers"
+                        v-model:page="page" 
                         :loading="!incidenciasStore.cargarIncidencias"
                         :items="incidenciasStore.listaIncidencias" 
                         :items-length="incidenciasStore.totalDeIncidencias"
-                        @update:options="(value) => incidenciasStore.cambiarPaginacion(value.itemsPerPage)">
+                        @update:options="handleUpdate">
                         <template v-slot:item.created_at="{ item }">
                             {{ formatearFecha(item.created_at) }}
                         </template>
