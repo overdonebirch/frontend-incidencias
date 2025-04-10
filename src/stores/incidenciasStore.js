@@ -10,13 +10,14 @@ import { useDialogStore } from "./dialogStore.js";
 export const useIncidenciasStore = defineStore('incidencias', () => {
 
     const alertasStore = useAlertasStore();
-    const urlBack = "http://localhost:8000/incidencias";
+    const dialogStore = useDialogStore();
     const incidenciaService = IncidenciaService();
+
     const cargarFormulario = ref(false);
     const cargarIncidencias = ref(false);
     const urgencias = ref(['Muy Alta', 'Alta', 'Media', 'Baja']) //El listado de todas las urgencias posibles
     const urgenciasDisponibles = ref(null) // El listado de las urgencias solo de las incidencias creadas
-    const dialogStore = useDialogStore();
+
     const jsonSchema = ref(null);
     const totalPaginas = ref(null);
     const listaIncidencias = ref([]);
@@ -26,7 +27,7 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
         descripcion: '',
         urgencia: ''
     })
-
+    const totalDeIncidencias = ref(0);
 
    
     async function obtenerSchema() {
@@ -37,8 +38,8 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
     async function obtenerIncidencias() {
         cargarIncidencias.value = false;
         const datos = await incidenciaService.obtenerIncidencias();
-        const {data,last_page} = datos;
-        
+        const {data,last_page,total} = datos;
+        totalDeIncidencias.value = total;
         //Obtengo las urgencias cada vez que cargo todas las incidencias : 
         urgenciasDisponibles.value = await incidenciaService.obtenerUrgenciasExistentes();
 
@@ -131,6 +132,7 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
         obtenerIncidencias();
     }
     function cambiarPaginacion(perPage){
+        perPage = perPage == -1 ? totalDeIncidencias.value : perPage; // Si se selecciona "all" en la vista de data-table
         incidenciaService.cambiarPaginacion(perPage);
         obtenerIncidencias();
     }
@@ -161,6 +163,7 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
         urgenciasDisponibles,
         totalPaginas,
         cargarIncidencias,
+        totalDeIncidencias,
         limpiarCamposIncidencia,
         crearIncidencia,
         actualizarIncidencia,
