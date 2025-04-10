@@ -154,6 +154,11 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
         obtenerIncidencias();
     }
 
+    function filtrosEnTabla({page,itemsPerPage,sortBy}){ //Un metodo creado para como funcionan los filtros en la vista de la tabla
+        itemsPerPage ? cambiarPaginacion(itemsPerPage) : '';
+        page ? seleccionarPagina(page) : '';
+        obtenerIncidencias();
+    } 
     return {
         incidenciaActualizar,
         listaIncidencias,
@@ -174,6 +179,7 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
         filtrarPorUrgencia,
         filtrarPorFechas,
         seleccionarPagina,
-        cambiarPaginacion
+        cambiarPaginacion,
+        filtrosEnTabla
     }
 })

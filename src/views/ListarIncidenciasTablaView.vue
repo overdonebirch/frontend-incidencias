@@ -26,11 +26,16 @@ const headers = ref([
 
 const handleUpdate = (options) => {
 
-    if(options.itemsPerPage)
-        incidenciasStore.cambiarPaginacion(options.itemsPerPage);
-    if(options.page)
-        incidenciasStore.seleccionarPagina(options.page);
+    // if(options.itemsPerPage)
+    //     incidenciasStore.cambiarPaginacion(options.itemsPerPage);
+    // if(options.page)
+    //     incidenciasStore.seleccionarPagina(options.page);
 
+    incidenciasStore.filtrosEnTabla({
+        page: options.page,
+        itemsPerPage: options.itemsPerPage,
+        sortBy: options.sortBy
+    });
 }
 
 </script>
@@ -47,16 +52,15 @@ const handleUpdate = (options) => {
             <v-row class="w-100">
                 <!-- Listado de incidencias -->
                 <v-col cols="12">
-                    <v-data-table-server v-model:items-per-page="itemsPerPage" :headers="headers"
-                        v-model:page="page" 
-                        :loading="!incidenciasStore.cargarIncidencias"
-                        :items="incidenciasStore.listaIncidencias" 
-                        :items-length="incidenciasStore.totalDeIncidencias"
-                        @update:options="handleUpdate">
+                    <v-data-table-server v-model:items-per-page="itemsPerPage" :headers="headers" v-model:page="page"
+                        :loading="!incidenciasStore.cargarIncidencias" :items="incidenciasStore.listaIncidencias"
+                        :items-length="incidenciasStore.totalDeIncidencias" @update:options="handleUpdate">
                         <template v-slot:item.created_at="{ item }">
                             {{ formatearFecha(item.created_at) }}
                         </template>
                     </v-data-table-server>
+
+
                 </v-col>
             </v-row>
         </template>
