@@ -154,9 +154,14 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
         obtenerIncidencias();
     }
 
-    function filtrosEnTabla({page,itemsPerPage,sortBy}){ //Un metodo creado para como funcionan los filtros en la vista de la tabla
+    function filtrosEnTabla({page,itemsPerPage,sortOrder,sortKey}){ //Un metodo creado para como funcionan los filtros en la vista de la tabla
+        debugger;
         itemsPerPage ? cambiarPaginacion(itemsPerPage) : '';
         page ? seleccionarPagina(page) : '';
+        if(sortKey){
+            console.log("Ordenando por ", sortOrder)
+            sortKey == 'created_at' ? incidenciaService.seleccionarAntiguedad(sortOrder) : '';
+        }
         obtenerIncidencias();
     } 
     return {

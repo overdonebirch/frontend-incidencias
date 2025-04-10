@@ -18,23 +18,35 @@ const page = ref(1);
 const headers = ref([
     { title: 'Titulo', key: 'titulo' },
     { title: 'Descripcion', key: 'descripcion' },
-    { title: 'Urgencia', key: 'urgencia' },
-    { title: 'Fecha Creación', key: 'created_at', format: value => formatearFecha(value) }
+    {
+        title: 'Urgencia', key: 'urgencia',
+
+    },
+    {
+        title: 'Fecha Creación', key: 'created_at', format: value => formatearFecha(value)
+
+    }
 
 
 ])
 
 const handleUpdate = (options) => {
 
-    // if(options.itemsPerPage)
-    //     incidenciasStore.cambiarPaginacion(options.itemsPerPage);
-    // if(options.page)
-    //     incidenciasStore.seleccionarPagina(options.page);
+
+    let sortOrder = null;
+    let sortKey = null;
+
+    if (options.sortBy && options.sortBy.length > 0) {
+        // Acceder al primer elemento del array y a sus propiedades
+        sortOrder = options.sortBy[0].order;
+        sortKey = options.sortBy[0].key;
+    }
 
     incidenciasStore.filtrosEnTabla({
         page: options.page,
         itemsPerPage: options.itemsPerPage,
-        sortBy: options.sortBy
+        sortOrder: sortOrder,
+        sortKey : sortKey
     });
 }
 
@@ -48,6 +60,7 @@ const handleUpdate = (options) => {
 
         </template>
 
+
         <template v-slot:body>
             <v-row class="w-100">
                 <!-- Listado de incidencias -->
@@ -55,9 +68,11 @@ const handleUpdate = (options) => {
                     <v-data-table-server v-model:items-per-page="itemsPerPage" :headers="headers" v-model:page="page"
                         :loading="!incidenciasStore.cargarIncidencias" :items="incidenciasStore.listaIncidencias"
                         :items-length="incidenciasStore.totalDeIncidencias" @update:options="handleUpdate">
+                
                         <template v-slot:item.created_at="{ item }">
                             {{ formatearFecha(item.created_at) }}
                         </template>
+
                     </v-data-table-server>
 
 
