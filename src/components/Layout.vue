@@ -8,7 +8,7 @@ import Header from './Header.vue';
         <v-row>
             <v-col cols="2">
                 <LeftSideBar class="h-screen">
-                    <v-list class=" h-100 d-flex flex-column justify-center ">
+                    <v-list class=" h-100 d-flex flex-column justify-start ga-3 pt-16">
                         <v-list-item>
                             <RouterLink class="text-decoration-none text-h5 text-cyan-lighten-5 font-weight-bold"
                                 :to="{ name: 'crear-incidencia' }">Crear Incidencia</RouterLink>
@@ -16,6 +16,10 @@ import Header from './Header.vue';
                         <v-list-item>
                             <RouterLink class="text-decoration-none text-h5 text-cyan-lighten-5 font-weight-bold"
                                 :to="{ name: 'listar-incidencias' }">Listar Incidencias</RouterLink>
+                        </v-list-item>
+                        <v-list-item>
+                            <RouterLink class="text-decoration-none text-h5 text-cyan-lighten-5 font-weight-bold"
+                                :to="{ name: 'listar-incidencias-tabla' }">Tabla Incidencias</RouterLink>
                         </v-list-item>
 
                     </v-list>
