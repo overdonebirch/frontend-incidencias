@@ -18,14 +18,9 @@ const page = ref(1);
 const headers = ref([
     { title: 'Titulo', key: 'titulo' },
     { title: 'Descripcion', key: 'descripcion' },
-    {
-        title: 'Urgencia', key: 'urgencia',
-
-    },
-    {
-        title: 'Fecha Creación', key: 'created_at', format: value => formatearFecha(value)
-
-    }
+    {title: 'Urgencia', key: 'urgencia'},
+    { title: 'Fecha Creación', key: 'created_at', format: value => formatearFecha(value)},
+    {title: 'Editar'}
 
 
 ])
