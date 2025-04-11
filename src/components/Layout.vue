@@ -1,51 +1,48 @@
 <script setup>
-import LeftSideBar from './LeftSideBar.vue';
+import { ref, reactive, computed } from 'vue';
 import Header from './Header.vue';
+const drawer = ref(false);
+const altura = computed(() => drawer.value ? 'h-screen' : '');
+
 </script>
 
 <template>
     <v-container fluid class="pa-0">
-        <v-row>
-            <v-col cols="2">
-                <LeftSideBar class="h-screen">
-                    <v-list class=" h-100 d-flex flex-column justify-start ga-3 pt-16">
-                        <v-list-item>
-                            <RouterLink class="text-decoration-none text-h5 text-cyan-lighten-5 font-weight-bold"
-                                :to="{ name: 'crear-incidencia' }">Crear Incidencia</RouterLink>
-                        </v-list-item>
-                        <v-list-item>
-                            <RouterLink class="text-decoration-none text-h5 text-cyan-lighten-5 font-weight-bold"
-                                :to="{ name: 'listar-incidencias' }">Listar Incidencias</RouterLink>
-                        </v-list-item>
-                        <v-list-item>
-                            <RouterLink class="text-decoration-none text-h5 text-cyan-lighten-5 font-weight-bold"
-                                :to="{ name: 'listar-incidencias-tabla' }">Tabla Incidencias</RouterLink>
-                        </v-list-item>
 
-                    </v-list>
-                </LeftSideBar>
-            </v-col>
-            <v-col cols="10" class="d-flex flex-column min-h-screen justify-space-between">
-    <v-row justify="center">
-        <v-col cols="12" class="d-flex flex-column align-center flex-grow-1">
+        <v-app-bar color="indigo-darken-3">
+            <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+        </v-app-bar>
 
-            <slot name="title" />
+        <v-navigation-drawer color="indigo" v-model="drawer" :location="$vuetify.display.mobile ? 'bottom' : undefined"
+            :class="altura">
+            <v-list class=" h-100 d-flex flex-column justify-start ga-3 pt-16">
+                <v-list-item>
+                    <RouterLink class="text-decoration-none text-h5 text-cyan-lighten-5 font-weight-bold"
+                        :to="{ name: 'crear-incidencia' }">Crear Incidencia</RouterLink>
+                </v-list-item>
+                <v-list-item>
+                    <RouterLink class="text-decoration-none text-h5 text-cyan-lighten-5 font-weight-bold"
+                        :to="{ name: 'listar-incidencias' }">Listar Incidencias</RouterLink>
+                </v-list-item>
+                <v-list-item>
+                    <RouterLink class="text-decoration-none text-h5 text-cyan-lighten-5 font-weight-bold"
+                        :to="{ name: 'listar-incidencias-tabla' }">Tabla Incidencias</RouterLink>
+                </v-list-item>
 
-            <v-row class="mt-15 flex-grow-1" justify="center">
-                <slot name="body" />
-            </v-row>
+            </v-list>
+        </v-navigation-drawer>
 
-            <v-row class="mt-15" justify="center">
-                <slot name="footer" />
-            </v-row>
-
-        </v-col>
-    </v-row>
-</v-col>
-
-
-
-        </v-row>
+        <v-main>
+            <v-container class="d-flex flex-column ga-10 align-center">
+                <slot name="title" />
+                <v-row>
+                    <slot name="body" />
+                </v-row>
+                <v-row>
+                    <slot name="footer" />
+                </v-row>
+            </v-container>
+        </v-main>
     </v-container>
 </template>
 <style>

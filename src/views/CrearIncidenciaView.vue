@@ -32,11 +32,12 @@ onMounted(async () => {
 
         <template v-slot:title>
 
-            <v-card color="teal-lighten-4" width="400" class="text-center pa-1 rounded-xl mt-10">
-                <v-card-text class="text-h4 white--text">
+            <v-card color="indigo-accent-2" width="400" class="text-center pa-1 rounded-xl">
+                <v-card-text class="text-h4 white--text ">
                     <h1 class="text-h4 font-weight-thin">Crea Una Incidencia</h1>
                 </v-card-text>
             </v-card>
+
             <div class="text-center pt-16" v-if="!incidenciasStore.cargarFormulario">
                 <v-progress-circular color="primary" indeterminate></v-progress-circular>
             </div>

@@ -33,7 +33,7 @@ onMounted(async () => {
     <Layout>
 
         <template v-slot:title>
-            <v-card color="teal-lighten-4" width="400" class="text-center pa-1 rounded-xl mt-10">
+            <v-card color="indigo-accent-2" width="400" class="text-center pa-1 rounded-xl ">
                 <v-card-text class="text-h4 white--text">
                     <h1 class="text-h4 font-weight-thin">Listado De Incidencias</h1>
                 </v-card-text>
