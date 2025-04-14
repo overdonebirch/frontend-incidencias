@@ -24,10 +24,7 @@ const altura = computed(() => drawer.value ? 'h-screen' : '');
                     <RouterLink class="text-decoration-none text-h5 text-cyan-lighten-5 font-weight-bold"
                         :to="{ name: 'listar-incidencias' }">Listar Incidencias</RouterLink>
                 </v-list-item>
-                <v-list-item>
-                    <RouterLink class="text-decoration-none text-h5 text-cyan-lighten-5 font-weight-bold"
-                        :to="{ name: 'listar-incidencias-tabla' }">Tabla Incidencias</RouterLink>
-                </v-list-item>
+
 
             </v-list>
         </v-navigation-drawer>
