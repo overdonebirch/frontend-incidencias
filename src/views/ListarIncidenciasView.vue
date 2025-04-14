@@ -7,6 +7,8 @@ import Formulario from '../components/Formulario.vue';
 import { useIncidenciasStore } from '../stores/incidenciasStore.js';
 import GlobalAlerts from '../components/GlobalAlerts.vue';
 import { RouterView } from 'vue-router';
+import { formatearFecha } from '../helpers/formatearFecha.js';
+import IncidenciaTd from '../components/IncidenciaTd.vue';
 const incidenciasStore = useIncidenciasStore();
 
 const mostrarIncidencias = ref(false)
@@ -48,26 +50,52 @@ onMounted(async () => {
             <div v-if="incidenciasStore.listaIncidencias.length <= 0"
                 class="text-center text-h5 amber text-blue-grey-lighten-3">--No hay datos--
             </div>
-            <v-row v-else>
-                <v-col lg="4 " md="12">
-                    <v-select class="w-75 mx-auto rounded-lg" label="Filtrar por urgencia" variant="underlined"
-                        v-model="urgenciaSeleccionada" :items="incidenciasStore.urgenciasDisponibles"></v-select>
-                </v-col>
-                <v-col lg="4 " md="12">
-                    <v-select class="w-75 mx-auto " label="Filtrar por fecha" v-model="tiempoSeleccionado"
-                        :items="['Mas Recientes', 'Mas Antiguas']" variant="underlined"></v-select>
-                </v-col>
-                <v-col lg="4" md="12">
 
-                    <v-select class="w-75 mx-auto " label="Paginar" v-model="paginacionSeleccionada"
-                    :items="[5,10,15]" variant="outlined"></v-select>
-
-                </v-col>
-            </v-row>
             <!-- Listado de incidencias -->
             <v-col cols="12">
+                <v-table>
+                    <!-- parte superior de la tabla -->
+                    <template v-slot:top>
+                        <v-row>
+                            <v-col lg="4" md="12">
 
-                <Incidencia v-for="incidencia in incidenciasStore.listaIncidencias" :incidencia="incidencia" />
+                                <v-select class="w-75 mx-auto " label="Paginar" v-model="paginacionSeleccionada"
+                                    :items="[5, 10, 15]" variant="outlined"></v-select>
+
+                            </v-col>
+                            <v-col lg="4 " md="12">
+                                <v-select class="w-75 mx-auto " label="Filtrar por fecha" v-model="tiempoSeleccionado"
+                                    :items="['Mas Recientes', 'Mas Antiguas']" variant="underlined"></v-select>
+                            </v-col>
+                            <v-col lg="4 " md="12">
+                                <v-select class="w-75 mx-auto rounded-lg" label="Filtrar por urgencia"
+                                    variant="underlined" v-model="urgenciaSeleccionada"
+                                    :items="incidenciasStore.urgenciasDisponibles"></v-select>
+                            </v-col>
+
+
+                        </v-row>
+                    </template>
+                    <!-- FIN de la parte superior -->
+                    <thead>
+                        <tr>
+                            <th>Titulo</th>
+                            <th>Descripción</th>
+                            <th>Urgencia</th>
+                            <th>Fecha Alta</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="incidencia in incidenciasStore.listaIncidencias">
+                            <IncidenciaTd 
+                            :incidencia="incidencia" >
+
+                            </IncidenciaTd>
+                        </tr>
+                    </tbody>
+                </v-table>
             </v-col>
 
 
