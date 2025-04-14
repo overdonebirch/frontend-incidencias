@@ -87,12 +87,12 @@ const configDialog = computed(() => {
       </template>
     </Dialog>
     
-    <td> {{ incidencia.titulo }}</td>
+    <td> {{ incidencia.titulo }}   </td>
     <td> {{ incidencia.descripcion }}</td>
     <td> {{ incidencia.urgencia }}</td>
     <td> {{ formatearFecha(incidencia.created_at) }}</td>
-    <td> <v-btn color="blue-lighten-4" @click="abrirDialogActualizar">Editar</v-btn></td>
-    <td> <v-btn color="deep-orange-lighten-3" @click="abrirDialogEliminar"> Eliminar</v-btn></td>
+    <td> <v-btn color="blue-lighten-4" @click="abrirDialogActualizar">     <v-icon icon="mdi-wrench" ></v-icon> Editar</v-btn></td>
+    <td> <v-btn color="deep-orange-lighten-3" @click="abrirDialogEliminar">  <v-icon icon="mdi-minus-circle"></v-icon>Eliminar</v-btn></td>
 
 </template>
 
