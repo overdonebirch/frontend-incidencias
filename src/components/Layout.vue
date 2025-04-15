@@ -41,12 +41,12 @@ const altura = computed(() => drawer.value ? 'h-screen' : '');
         <v-main>
             <v-container class="d-flex flex-column ga-10 align-center">
                 <slot name="title" />
-                <v-row>
+
                     <slot name="body" />
-                </v-row>
-                <v-row>
+ 
+
                     <slot name="footer" />
-                </v-row>
+
             </v-container>
         </v-main>
     </v-container>

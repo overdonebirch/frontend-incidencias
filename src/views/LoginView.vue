@@ -6,7 +6,8 @@ import { useIncidenciasStore } from '../stores/incidenciasStore.js';
 import GlobalAlerts from '../components/GlobalAlerts.vue';
 
 const incidenciasStore = useIncidenciasStore();
-
+const email = ref(null);
+const password = ref(null);
 
 
 
@@ -25,15 +26,18 @@ const incidenciasStore = useIncidenciasStore();
                     <h1 class="text-h4 font-weight-thin">Login</h1>
                 </v-card-text>
             </v-card>
-            <!-- Spinner de carga -->
-            <div class="text-center pt-16 min-h-screen " v-if="!incidenciasStore.cargarIncidencias">
-                <v-progress-circular color="primary" indeterminate></v-progress-circular>
-            </div>
         </template>
 
-        <template v-slot:body v-if="incidenciasStore.cargarIncidencias">
+        <template v-slot:body >
            
+            <v-form class="w-50 d-flex flex-column">    
+                <v-text-field label="email"  required>
 
+                </v-text-field>
+                <v-text-field label="password" required>
+                </v-text-field>
+                <v-btn  class="align-self-lg-end"type="submit">Loguearse</v-btn>
+            </v-form>
         </template>
 
     </Layout>
