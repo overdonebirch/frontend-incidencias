@@ -12,22 +12,23 @@ export const useAuthStore = defineStore("auth", () => {
     const userService = useUserService();
 
     const iniciarSesion = async (credenciales) => {
-
         try {
-            const response = await userService.iniciarSesion(credenciales);
-            console.log(response);
-            token.value = response.data.token;
-            user.value = response.data.user;
-            localStorage.setItem("authToken", token.value);
-            localStorage.setItem("user", JSON.stringify(user.value));
+          const response = await userService.iniciarSesion(credenciales);
+          token.value = response.data.token;
+          user.value = response.data.user;
+          localStorage.setItem("authToken", token.value);
+          localStorage.setItem("user", JSON.stringify(user.value));
+        } catch (error) {
+          console.log("Código de estado:", error.response?.status); 
+      
+          if (error.response?.status === 401) {
+            throw new Error("Las credenciales no son válidas");
+          } else {
+            throw new Error("Error al iniciar sesión: " + error.message);
+          }
         }
-        catch (error) {
-            console.log(error);
-            throw new Error(error.message)
-        }
-
-
-    }
+      };
+      
 
     const logout = async () => {
 

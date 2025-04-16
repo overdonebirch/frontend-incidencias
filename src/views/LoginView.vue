@@ -23,8 +23,8 @@ const login = async (e) => {
       device_name: 'browser'
     };
     //Metodo que se encarga obtener token y usuario
-    authStore.iniciarSesion(credenciales);
-    
+    await authStore.iniciarSesion(credenciales);
+
     alertasStore.agregarAlerta("success", "Usuario Logado");
     e.target.reset();
     router.push({name : 'crear-incidencia'});

@@ -12,6 +12,7 @@ export const useUserService = () => {
         if (token) {
           // Añadir el token al header de autorización
           config.headers.Authorization = `Bearer ${token}`;
+          config.headers.Accept = 'application/json'
         }
         return config;
     });
@@ -22,7 +23,7 @@ export const useUserService = () => {
             return response;
         }
         catch(error){
-            throw new Error(error.message)
+            throw error;
         }   
     }
     const logout = async () => {
