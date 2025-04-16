@@ -45,7 +45,7 @@ const logout  = async () =>{
                     <RouterLink class="text-decoration-none text-h4 text-lg-h5 text-cyan-lighten-5 font-weight-bold"
                         :to="{ name: 'crear-incidencia' }">Crear Incidencia</RouterLink>
                 </v-list-item>
-                <v-list-item>
+                <v-list-item >
                     <RouterLink class="text-decoration-none text-h4 text-lg-h5 text-cyan-lighten-5 font-weight-bold"
                         :to="{ name: 'listar-incidencias' }">Listar Incidencias</RouterLink>
                 </v-list-item>

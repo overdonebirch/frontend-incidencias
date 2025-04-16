@@ -5,9 +5,11 @@ import { useDialogStore } from '../stores/dialogStore.js';
 import { formatearFecha } from '../helpers/formatearFecha.js';
 import Dialog from './Dialog.vue';
 import Formulario from './Formulario.vue';
+import {useAuthStore} from '../stores/authStore.js'
 
 const incidenciasStore = useIncidenciasStore();
 const dialogStore = useDialogStore();
+const authStore = useAuthStore();
 
 const props = defineProps({
   incidencia: {
@@ -91,8 +93,8 @@ const configDialog = computed(() => {
     <td> {{ incidencia.descripcion }}</td>
     <td> {{ incidencia.urgencia }}</td>
     <td> {{ formatearFecha(incidencia.created_at) }}</td>
-    <td> <v-btn color="blue-lighten-4" @click="abrirDialogActualizar">     <v-icon icon="mdi-wrench" ></v-icon> Editar</v-btn></td>
-    <td> <v-btn color="deep-orange-lighten-3" @click="abrirDialogEliminar">  <v-icon icon="mdi-minus-circle"></v-icon>Eliminar</v-btn></td>
+    <td v-if="authStore.tienePermisoWildcard('incidencias.edit')"> <v-btn color="blue-lighten-4" @click="abrirDialogActualizar">     <v-icon icon="mdi-wrench" ></v-icon> Editar</v-btn></td>
+    <td v-if="authStore.tienePermisoWildcard('incidencias.delete')"> <v-btn color="deep-orange-lighten-3" @click="abrirDialogEliminar">  <v-icon icon="mdi-minus-circle"></v-icon>Eliminar</v-btn></td>
 
 </template>
 

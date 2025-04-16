@@ -13,33 +13,44 @@ export const useAuthStore = defineStore("auth", () => {
 
     const iniciarSesion = async (credenciales) => {
         try {
-          const response = await userService.iniciarSesion(credenciales);
-          token.value = response.data.token;
-          user.value = response.data.user;
-          localStorage.setItem("authToken", token.value);
-          localStorage.setItem("user", JSON.stringify(user.value));
+            const response = await userService.iniciarSesion(credenciales);
+            token.value = response.data.token;
+            user.value = response.data.user;
+            localStorage.setItem("authToken", token.value);
+            localStorage.setItem("user", JSON.stringify(user.value));
         } catch (error) {
-          console.log("Código de estado:", error.response?.status); 
-      
-          if (error.response?.status === 401) {
-            throw new Error("Las credenciales no son válidas");
-          } else {
-            throw new Error("Error al iniciar sesión: " + error.message);
-          }
+            console.log("Código de estado:", error.response?.status);
+
+            if (error.response?.status === 401) {
+                throw new Error("Las credenciales no son válidas");
+            } else {
+                throw new Error("Error al iniciar sesión: " + error.message);
+            }
         }
-      };
-      
+    };
+    const tienePermisoWildcard = (permisoBuscado) => {
+        if (!user.value?.permissions) return false;
+    
+        return user.value.permissions.some(permisoAsignado => {
+            const pattern = permisoAsignado
+                .replace(/\./g, '\\.')
+                .replace(/\*/g, '.*');
+            const regex = new RegExp(`^${pattern}$`);
+            return regex.test(permisoBuscado);
+        });
+    };
+    
 
     const logout = async () => {
 
-        try{
+        try {
             const response = await userService.logout();
             localStorage.removeItem("authToken");
             localStorage.removeItem("user");
             token.value = null;
             user.value = null;
         }
-        catch(error){
+        catch (error) {
             throw new Error(error.message)
         }
     }
@@ -49,7 +60,8 @@ export const useAuthStore = defineStore("auth", () => {
         user,
         logout,
         iniciarSesion,
-        sesionIniciada
+        sesionIniciada,
+        tienePermisoWildcard
     }
 
 })
