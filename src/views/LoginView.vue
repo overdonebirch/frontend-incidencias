@@ -8,7 +8,8 @@ import GlobalAlerts from '../components/GlobalAlerts.vue';
 import { useAuthStore } from '../stores/authStore.js';
 import axios from 'axios';
 
-
+import { useRouter } from 'vue-router';
+const router = useRouter();
 const authStore = useAuthStore();
 const alertasStore = useAlertasStore();
 const email = ref(null);
@@ -23,15 +24,17 @@ const login = async (e) => {
     };
 
     const response = await axios.post('http://localhost:8000/api/login', credenciales);
-    authStore.token = response.data.token;
+    console.log(response.data.user);
+    authStore.iniciarSesion(response.data.token, response.data.user);
     alertasStore.agregarAlerta("success", "Usuario Logado");
     e.target.reset();
+    router.push({name : 'crear-incidencia'});
   } catch (error) {
     alertasStore.agregarAlerta("error", error.response?.data?.message || error.message);
   }
 }
 
-
+console
 </script>
 
 <template>
