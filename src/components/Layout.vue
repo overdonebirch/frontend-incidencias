@@ -1,15 +1,32 @@
 <script setup>
 import { ref, reactive, computed, watch } from 'vue';
 import { useAuthStore } from '../stores/authStore';
+import { useAlertasStore } from '../stores/alertasStore';
 import Header from './Header.vue';
 
 const authStore = useAuthStore();
+const alertasStore = useAlertasStore();
 const drawer = ref(false);
 const altura = computed(() => drawer.value ? 'h-screen' : '');
-
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
 const textLogin = computed(() => authStore.sesionIniciada() ? 'Ver Perfil' : 'Login' );
 
+const logout  = async () =>{
+
+    try {
+        await authStore.logout();
+        router.push({name : 'crear-incidencia'});
+        drawer.value = false;
+        alertasStore.agregarAlerta("success","Te has deslogado");
+    }
+    catch(error){
+        drawer.value = false;
+        alertasStore.agregarAlerta("error",error.message);
+    }
+
+}
 
 </script>
 
@@ -35,6 +52,9 @@ const textLogin = computed(() => authStore.sesionIniciada() ? 'Ver Perfil' : 'Lo
                 <v-list-item>
                     <RouterLink class="text-decoration-none text-h4 text-lg-h5 text-cyan-lighten-5 font-weight-bold"
                         :to="{ name: 'login' }">{{textLogin}}</RouterLink>
+                </v-list-item>
+                <v-list-item v-if="authStore.sesionIniciada()">
+                    <v-btn @click="logout">Logout</v-btn>
                 </v-list-item>
 
 

@@ -18,7 +18,17 @@ export const useUserService = () => {
 
     const iniciarSesion = async (credenciales) => {
         try{
-            const response = await axios.post('http://localhost:8000/api/login', credenciales);
+            const response = await api.post('/api/login', credenciales);
+            return response;
+        }
+        catch(error){
+            throw new Error(error.message)
+        }   
+    }
+    const logout = async () => {
+        console.log(   api.interceptors);
+        try{
+            const response = await api.post('/api/logout');
             return response;
         }
         catch(error){
@@ -26,6 +36,7 @@ export const useUserService = () => {
         }   
     }
     return{
-        iniciarSesion
+        iniciarSesion,
+        logout
     }
 }
