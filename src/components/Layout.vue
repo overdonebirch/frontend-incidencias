@@ -1,11 +1,14 @@
 <script setup>
 import { ref, reactive, computed, watch } from 'vue';
+import { useAuthStore } from '../stores/authStore';
 import Header from './Header.vue';
+
+const authStore = useAuthStore();
 const drawer = ref(false);
 const altura = computed(() => drawer.value ? 'h-screen' : '');
 
 
-
+const textLogin = computed(() => authStore.sesionIniciada() ? 'Ver Perfil' : 'Login' );
 
 
 </script>
@@ -31,7 +34,7 @@ const altura = computed(() => drawer.value ? 'h-screen' : '');
                 </v-list-item>
                 <v-list-item>
                     <RouterLink class="text-decoration-none text-h4 text-lg-h5 text-cyan-lighten-5 font-weight-bold"
-                        :to="{ name: 'login' }">Login</RouterLink>
+                        :to="{ name: 'login' }">{{textLogin}}</RouterLink>
                 </v-list-item>
 
 
