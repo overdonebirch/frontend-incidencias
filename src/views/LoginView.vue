@@ -3,12 +3,33 @@
 import { ref, reactive, computed, onMounted, watch } from 'vue'
 import Layout from '../components/Layout.vue';
 import { useIncidenciasStore } from '../stores/incidenciasStore.js';
+import { useAlertasStore } from '../stores/alertasStore.js';
 import GlobalAlerts from '../components/GlobalAlerts.vue';
+import { useAuthStore } from '../stores/authStore.js';
+import axios from 'axios';
 
-const incidenciasStore = useIncidenciasStore();
+
+const authStore = useAuthStore();
+const alertasStore = useAlertasStore();
 const email = ref(null);
 const password = ref(null);
 
+const login = async (e) => {
+  try {
+    const credenciales = {
+      email: email.value,
+      password: password.value,
+      device_name: 'browser'
+    };
+
+    const response = await axios.post('http://localhost:8000/api/login', credenciales);
+    authStore.token = response.data.token;
+    alertasStore.agregarAlerta("success", "Usuario Logado");
+    e.target.reset();
+  } catch (error) {
+    alertasStore.agregarAlerta("error", error.response?.data?.message || error.message);
+  }
+}
 
 
 </script>
@@ -30,11 +51,11 @@ const password = ref(null);
 
         <template v-slot:body >
            
-            <v-form class="w-50 d-flex flex-column">    
-                <v-text-field label="email"  required>
+            <v-form class="w-50 d-flex flex-column" @submit.prevent="login">    
+                <v-text-field label="email"  v-model="email" required>
 
                 </v-text-field>
-                <v-text-field label="password" required>
+                <v-text-field label="password" v-model="password" required>
                 </v-text-field>
                 <v-btn  class="align-self-lg-end"type="submit">Loguearse</v-btn>
             </v-form>
