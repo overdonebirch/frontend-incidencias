@@ -34,7 +34,14 @@ const logout  = async () =>{
     <v-container fluid class="pa-0">
 
         <v-app-bar color="indigo-darken-3">
+
             <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+            <v-app-bar-title><i>Gestion De Incidencias</i></v-app-bar-title>
+            <template v-slot:append v-if="authStore.sesionIniciada()">
+                <div class="text-h5">
+                    Hola, {{ authStore.user.name }}
+                </div>
+            </template>
         </v-app-bar>
 
         <v-navigation-drawer color="indigo" class="pt-16" v-model="drawer" :location="$vuetify.display.mobile ? 'bottom' : undefined "
