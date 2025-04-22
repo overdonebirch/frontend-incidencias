@@ -22,7 +22,7 @@ export const useAuthStore = defineStore("auth", () => {
             console.log("Código de estado:", error.response?.status);
 
             if (error.response?.status === 401) {
-                throw new Error("Las credenciales no son válidas");
+                throw new Error(error.response.data.message);
             } else {
                 throw new Error("Error al iniciar sesión: " + error.message);
             }

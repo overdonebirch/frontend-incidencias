@@ -54,10 +54,10 @@ console
         <template v-slot:body >
            
             <v-form class="w-50 d-flex flex-column" @submit.prevent="login">    
-                <v-text-field label="email"  v-model="email" required>
+                <v-text-field type="email" label="email"  v-model="email" required>
 
                 </v-text-field>
-                <v-text-field label="password" v-model="password" required>
+                <v-text-field type="password" label="password" v-model="password" required>
                 </v-text-field>
                 <v-btn  class="align-self-lg-end"type="submit">Loguearse</v-btn>
             </v-form>

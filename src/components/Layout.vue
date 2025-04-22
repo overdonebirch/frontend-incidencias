@@ -12,6 +12,7 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 const textLogin = computed(() => authStore.sesionIniciada() ? 'Ver Perfil' : 'Login' );
+const rutaUser = computed(() => authStore.sesionIniciada() ? 'perfil' : 'login' );
 
 const logout  = async () =>{
 
@@ -58,7 +59,7 @@ const logout  = async () =>{
                 </v-list-item>
                 <v-list-item>
                     <RouterLink class="text-decoration-none text-h4 text-lg-h5 text-cyan-lighten-5 font-weight-bold"
-                        :to="{ name: 'login' }">{{textLogin}}</RouterLink>
+                        :to="{ name: rutaUser }">{{textLogin}}</RouterLink>
                 </v-list-item>
                 <v-list-item v-if="authStore.sesionIniciada()">
                     <v-btn @click="logout">Logout</v-btn>
