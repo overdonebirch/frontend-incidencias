@@ -142,6 +142,12 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
         obtenerIncidencias();
     }
 
+    function filtrarPorEstado(estadoSeleccionado){
+        estadoSeleccionado = estadoSeleccionado.trim();
+        incidenciaService.seleccionarEstado(estadoSeleccionado);
+        obtenerIncidencias();
+    }
+
     function filtrarPorFechas(orden) {
         orden = orden.trim();
         if(orden == 'Mas Recientes'){
@@ -183,6 +189,7 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
         obtenerSchema,
         filtrarPorUrgencia,
         filtrarPorFechas,
+        filtrarPorEstado,
         seleccionarPagina,
         cambiarPaginacion,
         filtrosEnTabla

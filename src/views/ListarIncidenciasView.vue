@@ -11,12 +11,14 @@ import { formatearFecha } from '../helpers/formatearFecha.js';
 import IncidenciaTd from '../components/IncidenciaTd.vue';
 const incidenciasStore = useIncidenciasStore();
 
-const mostrarIncidencias = ref(false)
 const urgenciaSeleccionada = ref(null);
+const estadoSeleccionado = ref(null);
 const tiempoSeleccionado = ref(null);
 const paginacionSeleccionada = ref(null);
+const mostrarFiltros = ref(['filtros']);
 
 watch(tiempoSeleccionado, () => { incidenciasStore.filtrarPorFechas(tiempoSeleccionado.value) })
+watch(estadoSeleccionado, () => { incidenciasStore.filtrarPorEstado(estadoSeleccionado.value) })
 watch(urgenciaSeleccionada, () => { incidenciasStore.filtrarPorUrgencia(urgenciaSeleccionada.value); })
 watch(paginacionSeleccionada, () => { incidenciasStore.cambiarPaginacion(paginacionSeleccionada.value); })
 onMounted(async () => {
@@ -57,23 +59,41 @@ onMounted(async () => {
                     <!-- parte superior de la tabla -->
                     <template v-slot:top>
                         <v-row>
-                            <v-col lg="4" md="12">
+                            <!-- Ocultar o mostrar filtros -->
+                            <v-expansion-panels v-model="mostrarFiltros" class="mb-10 ">
+                                <v-expansion-panel value="filtros">
+                                    <template v-slot:title>
+                                        Filros
+                                    </template>
+                                    <template v-slot:text>
+                                    <div class="d-flex flex-sm-wrap">
+                                        <v-col lg="4" md="12">
 
-                                <v-select class="w-75 mx-auto " label="Paginar" v-model="paginacionSeleccionada"
-                                    :items="[5, 10, 15]" variant="outlined"></v-select>
+                                            <v-select class="w-75 mx-auto " label="Paginar"
+                                                v-model="paginacionSeleccionada" :items="[5, 10, 15]"
+                                                variant="outlined"></v-select>
 
-                            </v-col>
-                            <v-col lg="4 " md="12">
-                                <v-select class="w-75 mx-auto " label="Filtrar por fecha" v-model="tiempoSeleccionado"
-                                    :items="['Mas Recientes', 'Mas Antiguas']" variant="underlined"></v-select>
-                            </v-col>
-                            <v-col lg="4 " md="12">
-                                <v-select class="w-75 mx-auto rounded-lg" label="Filtrar por urgencia"
-                                    variant="underlined" v-model="urgenciaSeleccionada"
-                                    :items="incidenciasStore.urgenciasDisponibles"></v-select>
-                            </v-col>
-
-
+                                        </v-col>
+                                        <v-col lg="4 " md="12">
+                                            <v-select class="w-75 mx-auto " label="Filtrar por fecha"
+                                                v-model="tiempoSeleccionado" :items="['Mas Recientes', 'Mas Antiguas']"
+                                                variant="underlined"></v-select>
+                                        </v-col>
+                                        <v-col lg="4 " md="12">
+                                            <v-select class="w-75 mx-auto rounded-lg" label="Filtrar por urgencia"
+                                                variant="underlined" v-model="urgenciaSeleccionada"
+                                                :items="incidenciasStore.urgenciasDisponibles"></v-select>
+                                        </v-col>
+                                        <v-col lg="4 " md="12">
+                                            <v-select class="w-75 mx-auto rounded-lg" label="Filtrar por estado"
+                                                variant="underlined" v-model="estadoSeleccionado"
+                                                :items="['En Proceso','Abierta','Cerrada','Resuelta']"></v-select>
+                                        </v-col>
+                                    </div>
+                                    </template>
+                                </v-expansion-panel>
+                            </v-expansion-panels>
+                            <!-- Fin Filtros -->
                         </v-row>
                     </template>
                     <!-- FIN de la parte superior -->
@@ -90,8 +110,7 @@ onMounted(async () => {
                     </thead>
                     <tbody>
                         <tr v-for="incidencia in incidenciasStore.listaIncidencias">
-                            <IncidenciaTd 
-                            :incidencia="incidencia" >
+                            <IncidenciaTd :incidencia="incidencia">
 
                             </IncidenciaTd>
                         </tr>
@@ -115,5 +134,8 @@ onMounted(async () => {
 <style>
 .min-h-screen {
     min-height: 990px;
+}
+.centrar{
+    margin: 0 auto;
 }
 </style>
