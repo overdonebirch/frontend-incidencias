@@ -5,8 +5,10 @@ import { useDialogStore } from '../stores/dialogStore.js';
 import { formatearFecha } from '../helpers/formatearFecha.js';
 import Dialog from './Dialog.vue';
 import Formulario from './Formulario.vue';
-import {useAuthStore} from '../stores/authStore.js'
+import { useAuthStore } from '../stores/authStore.js'
 import { mapearColorUrgencia } from '../helpers/incidencias/colorUrgencia.js';
+import { mapearColorEstado } from '../helpers/incidencias/colorEstado.js';
+
 const incidenciasStore = useIncidenciasStore();
 const dialogStore = useDialogStore();
 const authStore = useAuthStore();
@@ -22,7 +24,8 @@ const props = defineProps({
 
 const tipoDialog = ref('');
 const colorUrgencia = computed(() => mapearColorUrgencia(props.incidencia.urgencia));
-console.log(colorUrgencia.value);
+const colorEstado = computed(() => mapearColorEstado(props.incidencia.estado));
+
 const abrirDialogEliminar = () => {
   tipoDialog.value = 'eliminar';
   dialogStore.mostrarDialog = true;
@@ -77,34 +80,35 @@ const configDialog = computed(() => {
 
 <template>
 
-    <!-- Usar el componente de diálogo genérico -->
-    <Dialog
-      v-if="tipoDialog"
-      :titulo="configDialog.titulo"
-      :contenido="configDialog.contenido"
-      :colorTarjeta="configDialog.colorTarjeta"
-      :colorBotonPrincipal="configDialog.colorBotonPrincipal"
-      :textoBotonPrincipal="configDialog.textoBotonPrincipal"
-      @cerrar="cerrarDialog"
-      @confirmar="confirmarAccion"
-    >
-      <!-- Usando el slot para insertar el formulario cuando sea necesario -->
-      <template v-if="configDialog.mostrarFormulario" #contenido>
-        <Formulario modo="Edicion" />
-      </template>
-    </Dialog>
-    
-    <td> {{ incidencia.titulo }}   </td>
-    <td> {{ incidencia.descripcion }}</td>
-    <td><v-sheet class="text-white text-center rounded-lg font-weight-bold" :color="colorUrgencia">
+  <!-- Usar el componente de diálogo genérico -->
+  <Dialog v-if="tipoDialog" :titulo="configDialog.titulo" :contenido="configDialog.contenido"
+    :colorTarjeta="configDialog.colorTarjeta" :colorBotonPrincipal="configDialog.colorBotonPrincipal"
+    :textoBotonPrincipal="configDialog.textoBotonPrincipal" @cerrar="cerrarDialog" @confirmar="confirmarAccion">
+    <!-- Usando el slot para insertar el formulario cuando sea necesario -->
+    <template v-if="configDialog.mostrarFormulario" #contenido>
+      <Formulario modo="Edicion" />
+    </template>
+  </Dialog>
+
+  <td> {{ incidencia.titulo }} </td>
+  <td> {{ incidencia.descripcion }}</td>
+  <td>
+    <v-sheet class="text-white text-center rounded-lg font-weight-bold" :color="colorUrgencia">
       {{ incidencia.urgencia }}
-    </v-sheet> </td>
-    <td> {{ formatearFecha(incidencia.created_at) }}</td>
-    <td v-if="authStore.tienePermisoWildcard('incidencias.edit')"> <v-btn color="blue-lighten-4" @click="abrirDialogActualizar">     <v-icon icon="mdi-wrench" ></v-icon> Editar</v-btn></td>
-    <td v-if="authStore.tienePermisoWildcard('incidencias.delete')"> <v-btn color="deep-orange-lighten-3" @click="abrirDialogEliminar">  <v-icon icon="mdi-minus-circle"></v-icon>Eliminar</v-btn></td>
+    </v-sheet>
+  </td>
+  <td>
+    <v-sheet class="text-white text-center rounded-lg font-weight-bold" :color="colorEstado">
+      {{ incidencia.estado }}
+    </v-sheet>
+  </td>
+  <td> {{ formatearFecha(incidencia.created_at) }}</td>
+  <td v-if="authStore.tienePermisoWildcard('incidencias.edit')"> <v-btn color="blue-lighten-4"
+      @click="abrirDialogActualizar"> <v-icon icon="mdi-wrench"></v-icon> Editar</v-btn></td>
+
+  <td v-if="authStore.tienePermisoWildcard('incidencias.delete')"> <v-btn color="deep-orange-lighten-3"
+      @click="abrirDialogEliminar"> <v-icon icon="mdi-minus-circle"></v-icon>Eliminar</v-btn></td>
 
 </template>
 
-<style  scoped>
-
-</style>
+<style scoped></style>

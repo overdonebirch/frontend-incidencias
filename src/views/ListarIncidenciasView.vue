@@ -82,6 +82,7 @@ onMounted(async () => {
                             <th>Titulo</th>
                             <th>Descripción</th>
                             <th>Urgencia</th>
+                            <th>Estado</th>
                             <th>Fecha Alta</th>
                             <th></th>
                             <th></th>
