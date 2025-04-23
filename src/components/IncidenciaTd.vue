@@ -93,12 +93,12 @@ const configDialog = computed(() => {
   <td> {{ incidencia.titulo }} </td>
   <td> {{ incidencia.descripcion }}</td>
   <td>
-    <v-sheet class="text-white text-center rounded-lg font-weight-bold" :color="colorUrgencia">
+    <v-sheet class="elevation-1  text-white text-center rounded-sm font-weight-bold" :color="colorUrgencia">
       {{ incidencia.urgencia }}
     </v-sheet>
   </td>
   <td>
-    <v-sheet class="text-white text-center rounded-lg font-weight-bold" :color="colorEstado">
+    <v-sheet class="elevation-1  text-white text-center rounded-sm font-weight-bold" :color="colorEstado">
       {{ incidencia.estado }}
     </v-sheet>
   </td>
