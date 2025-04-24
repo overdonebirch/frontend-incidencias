@@ -9,6 +9,7 @@ import GlobalAlerts from '../components/GlobalAlerts.vue';
 import { RouterView } from 'vue-router';
 import { formatearFecha } from '../helpers/formatearFecha.js';
 import IncidenciaTd from '../components/IncidenciaTd.vue';
+import { red } from 'vuetify/util/colors';
 const incidenciasStore = useIncidenciasStore();
 
 const urgenciaSeleccionada = ref(null);
@@ -50,7 +51,7 @@ onMounted(async () => {
 
         <template v-slot:body v-if="incidenciasStore.cargarIncidencias">
             <div v-if="incidenciasStore.listaIncidencias.length <= 0"
-                class="text-center text-h5 amber text-blue-grey-lighten-3">--No hay datos--
+                class="text-center text-h5 amber text-blue-grey-lighten-1">--No hay datos--
             </div>
 
             <!-- Listado de incidencias -->
@@ -66,30 +67,31 @@ onMounted(async () => {
                                         Filros
                                     </template>
                                     <template v-slot:text>
-                                    <div class="d-flex flex-sm-wrap">
-                                        <v-col lg="4" md="12">
+                                        <div class="d-flex flex-sm-wrap">
+                                            <v-col lg="4" md="12">
 
-                                            <v-select class="w-75 mx-auto " label="Paginar"
-                                                v-model="paginacionSeleccionada" :items="[5, 10, 15]"
-                                                variant="outlined"></v-select>
+                                                <v-select class="w-75 mx-auto " label="Paginar"
+                                                    v-model="paginacionSeleccionada" :items="[5, 10, 15]"
+                                                    variant="outlined"></v-select>
 
-                                        </v-col>
-                                        <v-col lg="4 " md="12">
-                                            <v-select class="w-75 mx-auto " label="Filtrar por fecha"
-                                                v-model="tiempoSeleccionado" :items="['Mas Recientes', 'Mas Antiguas']"
-                                                variant="underlined"></v-select>
-                                        </v-col>
-                                        <v-col lg="4 " md="12">
-                                            <v-select class="w-75 mx-auto rounded-lg" label="Filtrar por urgencia"
-                                                variant="underlined" v-model="urgenciaSeleccionada"
-                                                :items="incidenciasStore.urgenciasDisponibles"></v-select>
-                                        </v-col>
-                                        <v-col lg="4 " md="12">
-                                            <v-select class="w-75 mx-auto rounded-lg" label="Filtrar por estado"
-                                                variant="underlined" v-model="estadoSeleccionado"
-                                                :items="['En Proceso','Abierta','Cerrada','Resuelta']"></v-select>
-                                        </v-col>
-                                    </div>
+                                            </v-col>
+                                            <v-col lg="4 " md="12">
+                                                <v-select class="w-75 mx-auto " label="Filtrar por fecha"
+                                                    v-model="tiempoSeleccionado"
+                                                    :items="['Mas Recientes', 'Mas Antiguas']"
+                                                    variant="underlined"></v-select>
+                                            </v-col>
+                                            <v-col lg="4 " md="12">
+                                                <v-select class="w-75 mx-auto rounded-lg" label="Filtrar por urgencia"
+                                                    variant="underlined" v-model="urgenciaSeleccionada"
+                                                    :items="incidenciasStore.urgenciasDisponibles"></v-select>
+                                            </v-col>
+                                            <v-col lg="4 " md="12">
+                                                <v-select class="w-75 mx-auto rounded-lg" label="Filtrar por estado"
+                                                    variant="underlined" v-model="estadoSeleccionado"
+                                                    :items="['En Proceso', 'Abierta', 'Cerrada', 'Resuelta']"></v-select>
+                                            </v-col>
+                                        </div>
                                     </template>
                                 </v-expansion-panel>
                             </v-expansion-panels>
@@ -109,11 +111,13 @@ onMounted(async () => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="incidencia in incidenciasStore.listaIncidencias">
-                            <IncidenciaTd :incidencia="incidencia">
-
-                            </IncidenciaTd>
-                        </tr>
+                        <v-hover v-for="incidencia in incidenciasStore.listaIncidencias" :key="incidencia.id">
+                            <template v-slot:default="{ isHovering, props }">
+                                <tr v-bind="props" :class="{ 'bg-indigo-lighten-2': isHovering }" style="cursor: pointer;">
+                                    <IncidenciaTd :incidencia="incidencia" />
+                                </tr>
+                            </template>
+                        </v-hover>
                     </tbody>
                 </v-table>
             </v-col>
@@ -135,7 +139,19 @@ onMounted(async () => {
 .min-h-screen {
     min-height: 990px;
 }
-.centrar{
+
+.centrar {
     margin: 0 auto;
+}
+
+.bg-red {
+    background-color: rgba(255, 0, 0, 0.2) !important;
+    /* Rojo con transparencia */
+}
+
+/* Si prefieres definir todo en una clase */
+.row-hover:hover {
+    background-color: rgba(255, 0, 0, 0.2) !important;
+    cursor: pointer;
 }
 </style>

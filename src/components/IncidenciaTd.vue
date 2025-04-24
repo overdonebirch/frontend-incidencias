@@ -111,4 +111,7 @@ const configDialog = computed(() => {
 
 </template>
 
-<style scoped></style>
+<style scoped>
+
+
+</style>
