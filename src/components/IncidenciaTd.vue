@@ -80,6 +80,7 @@ const configDialog = computed(() => {
 
 <template>
 
+
   <!-- Usar el componente de diálogo genérico -->
   <Dialog v-if="tipoDialog" :titulo="configDialog.titulo" :contenido="configDialog.contenido"
     :colorTarjeta="configDialog.colorTarjeta" :colorBotonPrincipal="configDialog.colorBotonPrincipal"

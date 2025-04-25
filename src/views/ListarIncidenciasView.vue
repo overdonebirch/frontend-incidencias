@@ -27,12 +27,20 @@ onMounted(async () => {
     await incidenciasStore.obtenerSchema();
 })
 
+const drawer = ref(false);
+const altura = computed(() => drawer.value ? 'h-screen' : '');
 
+const detallesIncidencia = (id) => {
+    drawer.value = !drawer.value
+    incidenciasStore.incidenciaActualizar = incidenciasStore.listaIncidencias.find(value => value.id === id);
+    console.log(incidenciasStore.incidenciaActualizar.titulo);
+}
 </script>
 
 <template>
 
     <GlobalAlerts />
+
 
 
     <Layout>
@@ -49,10 +57,52 @@ onMounted(async () => {
             </div>
         </template>
 
+
         <template v-slot:body v-if="incidenciasStore.cargarIncidencias">
+
+            <v-navigation-drawer style="background-color: rgba(65, 81, 181, 0.7);" class="pt-16 d-flex flex-column"
+                v-model="drawer" :location="'bottom'" :class="altura">
+                <!-- Otros elementos aquí si los hay -->
+
+                <div class="d-flex justify-end opacity-100">
+                    <v-btn class="ma-2 " @click="() => drawer = !drawer" color="deep-purple-lighten-1">
+                        <v-icon icon="mdi-arrow-left" start></v-icon>
+                        Back
+                    </v-btn>
+                </div>
+
+                <v-card style="background-color: rgba(186, 195, 247, 1);" class="w-75 centrar" elevation="0">
+
+
+                    <v-card-title class="text-h4 text-white font-weight-bold">Datos Incidencia</v-card-title>
+                    <v-card-text class="text-white text-h3 d-flex flex-column w-100 align-stretch">
+                        <div class="d-flex align-center justify-space-evenly centrar">
+                            <v-label class="ancho-label text-black text-h4">Titulo : </v-label>
+                            <v-text-field class="" bg-color="indigo-accent-2" disabled 
+                            v-model="incidenciasStore.incidenciaActualizar.titulo"></v-text-field>
+                        </div>
+                        <div class="  d-flex align-center justify-space-evenly centrar">
+                            <v-label class="ancho-label text-black text-h4">Descripcion : </v-label>
+                            <v-text-field class="" bg-color="indigo-accent-2" disabled
+                            v-model="incidenciasStore.incidenciaActualizar.descripcion"></v-text-field>
+                        </div>
+                        <div class="  d-flex align-center justify-space-evenly centrar">
+                            <v-label class="ancho-label text-black text-h4 mr-auto">Urgencia : </v-label>
+                            <v-label class="ancho-label text-black text-h4 centrar">Urgencia : </v-label>
+
+
+                        </div>
+                    </v-card-text>
+                </v-card>
+
+            </v-navigation-drawer>
+
+
+
             <div v-if="incidenciasStore.listaIncidencias.length <= 0"
                 class="text-center text-h5 amber text-blue-grey-lighten-1">--No hay datos--
             </div>
+
 
             <!-- Listado de incidencias -->
             <v-col cols="12">
@@ -113,7 +163,8 @@ onMounted(async () => {
                     <tbody>
                         <v-hover v-for="incidencia in incidenciasStore.listaIncidencias" :key="incidencia.id">
                             <template v-slot:default="{ isHovering, props }">
-                                <tr v-bind="props" :class="{ 'bg-indigo-lighten-2': isHovering }" style="cursor: pointer;">
+                                <tr @click="detallesIncidencia(incidencia.id)" v-bind="props"
+                                    :class="{ 'bg-indigo-lighten-2': isHovering }" style="cursor: pointer;">
                                     <IncidenciaTd :incidencia="incidencia" />
                                 </tr>
                             </template>
@@ -153,5 +204,9 @@ onMounted(async () => {
 .row-hover:hover {
     background-color: rgba(255, 0, 0, 0.2) !important;
     cursor: pointer;
+}
+
+.ancho-label{
+    width: 300px;
 }
 </style>

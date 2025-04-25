@@ -71,7 +71,7 @@ const user = ref(authStore.user);
 
 
 
-<style  scoped>
+<style scoped>
 .ancho{
     width: 400px;
 }

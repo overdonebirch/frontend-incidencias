@@ -170,6 +170,7 @@ export const useIncidenciasStore = defineStore('incidencias', () => {
         }
         obtenerIncidencias();
     } 
+    
     return {
         incidenciaActualizar,
         listaIncidencias,
