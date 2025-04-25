@@ -2,14 +2,10 @@
 
 import { ref, reactive, computed, onMounted, watch } from 'vue'
 import Layout from '../components/Layout.vue';
-import Incidencia from '../components/Incidencia.vue';
-import Formulario from '../components/Formulario.vue';
 import { useIncidenciasStore } from '../stores/incidenciasStore.js';
 import GlobalAlerts from '../components/GlobalAlerts.vue';
-import { RouterView } from 'vue-router';
-import { formatearFecha } from '../helpers/formatearFecha.js';
 import IncidenciaTd from '../components/IncidenciaTd.vue';
-import { red } from 'vuetify/util/colors';
+import DetalleIncidencia from '../components/DetalleIncidencia.vue';
 const incidenciasStore = useIncidenciasStore();
 
 const urgenciaSeleccionada = ref(null);
@@ -33,7 +29,6 @@ const altura = computed(() => drawer.value ? 'h-screen' : '');
 const detallesIncidencia = (id) => {
     drawer.value = !drawer.value
     incidenciasStore.incidenciaActualizar = incidenciasStore.listaIncidencias.find(value => value.id === id);
-    console.log(incidenciasStore.incidenciaActualizar.titulo);
 }
 </script>
 
@@ -55,50 +50,14 @@ const detallesIncidencia = (id) => {
             <div class="text-center pt-16 min-h-screen " v-if="!incidenciasStore.cargarIncidencias">
                 <v-progress-circular color="primary" indeterminate></v-progress-circular>
             </div>
+            
+
         </template>
 
 
         <template v-slot:body v-if="incidenciasStore.cargarIncidencias">
 
-            <v-navigation-drawer style="background-color: rgba(65, 81, 181, 0.7);" class="pt-16 d-flex flex-column"
-                v-model="drawer" :location="'bottom'" :class="altura">
-                <!-- Otros elementos aquí si los hay -->
-
-                <div class="d-flex justify-end opacity-100">
-                    <v-btn class="ma-2 " @click="() => drawer = !drawer" color="deep-purple-lighten-1">
-                        <v-icon icon="mdi-arrow-left" start></v-icon>
-                        Back
-                    </v-btn>
-                </div>
-
-                <v-card style="background-color: rgba(186, 195, 247, 1);" class="w-75 centrar" elevation="0">
-
-
-                    <v-card-title class="text-h4 text-white font-weight-bold">Datos Incidencia</v-card-title>
-                    <v-card-text class="text-white text-h3 d-flex flex-column w-100 align-stretch">
-                        <div class="d-flex align-center justify-space-evenly centrar">
-                            <v-label class="ancho-label text-black text-h4">Titulo : </v-label>
-                            <v-text-field class="" bg-color="indigo-accent-2" disabled 
-                            v-model="incidenciasStore.incidenciaActualizar.titulo"></v-text-field>
-                        </div>
-                        <div class="  d-flex align-center justify-space-evenly centrar">
-                            <v-label class="ancho-label text-black text-h4">Descripcion : </v-label>
-                            <v-text-field class="" bg-color="indigo-accent-2" disabled
-                            v-model="incidenciasStore.incidenciaActualizar.descripcion"></v-text-field>
-                        </div>
-                        <div class="  d-flex align-center justify-space-evenly centrar">
-                            <v-label class="ancho-label text-black text-h4 mr-auto">Urgencia : </v-label>
-                            <v-label class="ancho-label text-black text-h4 centrar">Urgencia : </v-label>
-
-
-                        </div>
-                    </v-card-text>
-                </v-card>
-
-            </v-navigation-drawer>
-
-
-
+            <DetalleIncidencia v-model:drawer="drawer"></DetalleIncidencia>
             <div v-if="incidenciasStore.listaIncidencias.length <= 0"
                 class="text-center text-h5 amber text-blue-grey-lighten-1">--No hay datos--
             </div>
@@ -206,7 +165,7 @@ const detallesIncidencia = (id) => {
     cursor: pointer;
 }
 
-.ancho-label{
+.ancho-label {
     width: 300px;
 }
 </style>
